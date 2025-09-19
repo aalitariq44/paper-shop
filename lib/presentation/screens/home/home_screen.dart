@@ -57,7 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      leading: const Icon(Icons.store, color: AppColors.textLight),
+      leading: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Image.asset(
+          'assets/images/icon.jpg',
+          width: 24,
+          height: 24,
+          fit: BoxFit.contain,
+        ),
+      ),
       backgroundColor: AppColors.primaryColor,
       foregroundColor: AppColors.textLight,
       elevation: 2,
