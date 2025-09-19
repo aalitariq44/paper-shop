@@ -3,7 +3,7 @@ class AppStrings {
   AppStrings._(); // منع إنشاء instance من الكلاس
 
   // العامة
-  static const String appName = 'متجر القرطاسية';
+  static const String appName = 'متجر ورق';
   static const String loading = 'جارٍ التحميل...';
   static const String retry = 'إعادة المحاولة';
   static const String error = 'حدث خطأ';

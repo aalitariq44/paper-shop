@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       authProvider.isSignedIn
                           ? 'مرحباً ${authProvider.user?.displayName ?? 'بك'}'
-                          : 'مرحباً بك في متجر القرطاسية',
+                          : 'مرحباً بك في متجر ورق',
                       style: const TextStyle(
                         color: AppColors.textLight,
                         fontSize: 18,

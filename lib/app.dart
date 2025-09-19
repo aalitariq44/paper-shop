@@ -14,7 +14,7 @@ import 'package:paper_shop/presentation/screens/profile/profile_setup_screen.dar
 import 'package:paper_shop/presentation/screens/cart/cart_screen.dart';
 import 'package:paper_shop/presentation/screens/product/product_details_screen.dart';
 
-/// التطبيق الرئيسي لمتجر القرطاسية
+/// التطبيق الرئيسي لمتجر ورق
 class PaperShopApp extends StatelessWidget {
   const PaperShopApp({super.key});
 
