@@ -83,11 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Transform.translate(
           offset: const Offset(-8, 0),
-          child: IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // TODO: تنفيذ منطق الإشعارات لاحقاً
-            },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: IconButton(
+              icon: const Icon(Icons.notifications),
+              onPressed: () {
+                // TODO: تنفيذ منطق الإشعارات لاحقاً
+              },
+            ),
           ),
         ),
         Consumer<CartProvider>(
