@@ -215,8 +215,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: Icons.person,
               title: 'الاسم',
               value: user?.displayName ?? 'غير محدد',
-              isEditable: true,
-              onEdit: () => _editDisplayName(user?.displayName),
             ),
             _buildDetailRow(
               icon: Icons.phone,
@@ -534,87 +532,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _editDisplayName(String? currentName) async {
-    final controller = TextEditingController(text: currentName ?? '');
-
-    final newName = await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('تعديل الاسم'),
-          content: TextFormField(
-            controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'الاسم الكامل',
-              border: OutlineInputBorder(),
-            ),
-            autofocus: true,
-            textInputAction: TextInputAction.done,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('إلغاء'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final name = controller.text.trim();
-                if (name.isNotEmpty) {
-                  Navigator.of(context).pop(name);
-                }
-              },
-              child: const Text('حفظ'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (newName != null && newName != currentName) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        final authProvider = context.read<AuthProvider>();
-        final success = await authProvider.updateProfile(displayName: newName);
-
-        if (mounted && success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم تحديث الاسم بنجاح'),
-              backgroundColor: AppColors.successColor,
-            ),
-          );
-        } else if (mounted && authProvider.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(authProvider.errorMessage!),
-              backgroundColor: AppColors.errorColor,
-            ),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('حدث خطأ في تحديث الاسم: ${e.toString()}'),
-              backgroundColor: AppColors.errorColor,
-            ),
-          );
-        }
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      }
-    }
-
-    controller.dispose();
   }
 }
