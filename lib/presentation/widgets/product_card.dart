@@ -350,7 +350,7 @@ class ProductCard extends StatelessWidget {
             children: [
               // السعر الحالي
               Text(
-                '${product.price.toStringAsFixed(0)} ر.س',
+                '${product.price.toStringAsFixed(0)} د.ع',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -480,7 +480,7 @@ class HorizontalProductCard extends StatelessWidget {
                         children: [
                           // السعر
                           Text(
-                            '${product.price.toStringAsFixed(0)} ر.س',
+                            '${product.price.toStringAsFixed(0)} د.ع',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,

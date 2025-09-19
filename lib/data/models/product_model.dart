@@ -138,7 +138,7 @@ class ProductModel {
   }
 
   /// الحصول على السعر مع العملة
-  String get formattedPrice => '${price.toStringAsFixed(0)} ر.س';
+  String get formattedPrice => '${price.toStringAsFixed(0)} د.ع';
 
   /// التحقق من وجود المنتج في المخزون
   bool get inStock {

@@ -10,7 +10,7 @@ class AppHelpers {
 
   /// تنسيق السعر مع العملة
   static String formatPrice(double price) {
-    return '${NumberFormat('#,##0', 'ar').format(price)} ر.س';
+    return '${NumberFormat('#,##0', 'ar').format(price)} د.ع';
   }
 
   /// تنسيق الرقم مع الفواصل

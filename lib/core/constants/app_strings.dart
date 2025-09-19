@@ -35,7 +35,7 @@ class AppStrings {
   static const String addToCart = 'إضافة للسلة';
   static const String inStock = 'متوفر';
   static const String outOfStock = 'غير متوفر';
-  static const String currency = 'ر.س'; // ريال سعودي
+  static const String currency = 'د.ع'; // دينار عراقي
 
   // سلة المشتريات
   static const String cart = 'السلة';

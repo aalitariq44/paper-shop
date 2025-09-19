@@ -55,7 +55,7 @@ class CartItemModel {
   double get totalPrice => product.price * quantity;
 
   /// الحصول على السعر الإجمالي مع العملة
-  String get formattedTotalPrice => '${totalPrice.toStringAsFixed(0)} ر.س';
+  String get formattedTotalPrice => '${totalPrice.toStringAsFixed(0)} د.ع';
 
   /// التحقق من توفر المنتج بالكمية المطلوبة
   bool get isAvailable {
@@ -156,7 +156,7 @@ class CartModel {
   }
 
   /// الحصول على السعر الإجمالي مع العملة
-  String get formattedTotalPrice => '${totalPrice.toStringAsFixed(0)} ر.س';
+  String get formattedTotalPrice => '${totalPrice.toStringAsFixed(0)} د.ع';
 
   /// التحقق من وجود عناصر في السلة
   bool get isEmpty => items.isEmpty;

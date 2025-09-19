@@ -55,7 +55,7 @@ class CartProvider extends ChangeNotifier {
   /// رسوم الشحن
   double get shippingCost {
     const double cost = 15.0;
-    return totalPrice > 100 ? 0 : cost; // شحن مجاني للطلبات أكثر من 100 ريال
+    return totalPrice > 100 ? 0 : cost; // شحن مجاني للطلبات أكثر من 100 دينار
   }
 
   /// تحميل السلة من التخزين المحلي
