@@ -71,10 +71,8 @@ class AuthService {
   /// تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
   Future<UserModel?> signInWithEmail(String email, String password) async {
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
       final User? user = userCredential.user;
 
       if (user != null) {
@@ -92,12 +90,14 @@ class AuthService {
   }
 
   /// إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
-  Future<UserModel?> signUpWithEmail(String email, String password, {String? displayName}) async {
+  Future<UserModel?> signUpWithEmail(
+    String email,
+    String password, {
+    String? displayName,
+  }) async {
     try {
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
       final User? user = userCredential.user;
 
       if (user != null) {

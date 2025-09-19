@@ -98,9 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              _showEmailLogin 
-                ? (_isSignUpMode ? 'إنشاء حساب جديد' : 'تسجيل الدخول')
-                : AppStrings.welcomeBack,
+              _showEmailLogin
+                  ? (_isSignUpMode ? 'إنشاء حساب جديد' : 'تسجيل الدخول')
+                  : AppStrings.welcomeBack,
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -110,14 +110,19 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              _showEmailLogin 
-                ? (_isSignUpMode ? 'أدخل بياناتك لإنشاء حساب جديد' : 'أدخل بياناتك لتسجيل الدخول')
-                : AppStrings.pleaseSignIn,
-              style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+              _showEmailLogin
+                  ? (_isSignUpMode
+                        ? 'أدخل بياناتك لإنشاء حساب جديد'
+                        : 'أدخل بياناتك لتسجيل الدخول')
+                  : AppStrings.pleaseSignIn,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-            
+
             if (!_showEmailLogin) ...[
               _buildGoogleSignInButton(),
               const SizedBox(height: 16),
@@ -154,12 +159,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildEmailLoginButton() {
     return OutlinedButton.icon(
-      onPressed: _isLoading ? null : () {
-        setState(() {
-          _showEmailLogin = true;
-          _isSignUpMode = false;
-        });
-      },
+      onPressed: _isLoading
+          ? null
+          : () {
+              setState(() {
+                _showEmailLogin = true;
+                _isSignUpMode = false;
+              });
+            },
       icon: const Icon(Icons.email, color: AppColors.primaryColor),
       label: const Text(
         'تسجيل الدخول بالبريد الإلكتروني',
@@ -196,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 16),
           ],
-          
+
           TextFormField(
             controller: _emailController,
             decoration: const InputDecoration(
@@ -209,14 +216,16 @@ class _LoginScreenState extends State<LoginScreen> {
               if (value == null || value.trim().isEmpty) {
                 return 'يرجى إدخال البريد الإلكتروني';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              ).hasMatch(value)) {
                 return 'يرجى إدخال بريد إلكتروني صحيح';
               }
               return null;
             },
           ),
           const SizedBox(height: 16),
-          
+
           TextFormField(
             controller: _passwordController,
             decoration: const InputDecoration(
@@ -235,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
               return null;
             },
           ),
-          
+
           if (_isSignUpMode) ...[
             const SizedBox(height: 16),
             TextFormField(
@@ -257,9 +266,9 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
           ],
-          
+
           const SizedBox(height: 24),
-          
+
           Consumer<AuthProvider>(
             builder: (context, authProvider, child) {
               return CustomButton.primary(
@@ -271,25 +280,27 @@ class _LoginScreenState extends State<LoginScreen> {
               );
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(_isSignUpMode ? 'لديك حساب؟ ' : 'ليس لديك حساب؟ '),
               TextButton(
-                onPressed: _isLoading ? null : () {
-                  setState(() {
-                    _isSignUpMode = !_isSignUpMode;
-                    _clearForm();
-                  });
-                },
+                onPressed: _isLoading
+                    ? null
+                    : () {
+                        setState(() {
+                          _isSignUpMode = !_isSignUpMode;
+                          _clearForm();
+                        });
+                      },
                 child: Text(_isSignUpMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد'),
               ),
             ],
           ),
-          
+
           if (!_isSignUpMode) ...[
             TextButton(
               onPressed: _isLoading ? null : _showForgotPasswordDialog,
@@ -303,13 +314,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildBackToOptionsButton() {
     return TextButton.icon(
-      onPressed: _isLoading ? null : () {
-        setState(() {
-          _showEmailLogin = false;
-          _isSignUpMode = false;
-          _clearForm();
-        });
-      },
+      onPressed: _isLoading
+          ? null
+          : () {
+              setState(() {
+                _showEmailLogin = false;
+                _isSignUpMode = false;
+                _clearForm();
+              });
+            },
       icon: const Icon(Icons.arrow_back),
       label: const Text('العودة إلى خيارات تسجيل الدخول'),
     );
@@ -527,7 +540,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _showForgotPasswordDialog() async {
     final emailController = TextEditingController();
-    
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -537,7 +550,9 @@ class _LoginScreenState extends State<LoginScreen> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                const Text('أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور'),
+                const Text(
+                  'أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور',
+                ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: emailController,
@@ -563,16 +578,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (emailController.text.trim().isNotEmpty) {
                   try {
                     final authProvider = context.read<AuthProvider>();
-                    final success = await authProvider.sendPasswordResetEmail(emailController.text.trim());
-                    
+                    final success = await authProvider.sendPasswordResetEmail(
+                      emailController.text.trim(),
+                    );
+
                     if (mounted) {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(success 
-                            ? 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني'
-                            : 'فشل في إرسال رابط إعادة تعيين كلمة المرور'),
-                          backgroundColor: success ? Colors.green : AppColors.errorColor,
+                          content: Text(
+                            success
+                                ? 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني'
+                                : 'فشل في إرسال رابط إعادة تعيين كلمة المرور',
+                          ),
+                          backgroundColor: success
+                              ? Colors.green
+                              : AppColors.errorColor,
                           duration: const Duration(seconds: 4),
                         ),
                       );

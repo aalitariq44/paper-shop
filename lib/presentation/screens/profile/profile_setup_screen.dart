@@ -289,7 +289,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         );
 
         // العودة للشاشة الرئيسية
-        Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.home, (route) => false);
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil(AppRoutes.home, (route) => false);
       } else if (mounted && authProvider.errorMessage != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -104,12 +104,20 @@ class AuthProvider extends ChangeNotifier {
   }
 
   /// إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
-  Future<bool> signUpWithEmail(String email, String password, {String? displayName}) async {
+  Future<bool> signUpWithEmail(
+    String email,
+    String password, {
+    String? displayName,
+  }) async {
     try {
       _setLoading(true);
       _clearError();
 
-      final result = await _authRepository.signUpWithEmail(email, password, displayName: displayName);
+      final result = await _authRepository.signUpWithEmail(
+        email,
+        password,
+        displayName: displayName,
+      );
 
       if (result.isSuccess && result.user != null) {
         _user = result.user;

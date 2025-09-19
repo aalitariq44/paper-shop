@@ -11,6 +11,7 @@ import 'package:paper_shop/presentation/providers/user_provider.dart';
 import 'package:paper_shop/presentation/screens/home/home_screen.dart';
 import 'package:paper_shop/presentation/screens/auth/login_screen.dart';
 import 'package:paper_shop/presentation/screens/profile/profile_setup_screen.dart';
+import 'package:paper_shop/presentation/screens/profile/profile_screen.dart';
 import 'package:paper_shop/presentation/screens/cart/cart_screen.dart';
 import 'package:paper_shop/presentation/screens/product/product_details_screen.dart';
 
@@ -310,6 +311,12 @@ class PaperShopApp extends StatelessWidget {
       case AppRoutes.profileSetup:
         return MaterialPageRoute(
           builder: (_) => const ProfileSetupScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.profile:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
           settings: settings,
         );
 

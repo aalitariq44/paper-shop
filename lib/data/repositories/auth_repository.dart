@@ -65,9 +65,17 @@ class AuthRepository {
   }
 
   /// إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
-  Future<AuthResult> signUpWithEmail(String email, String password, {String? displayName}) async {
+  Future<AuthResult> signUpWithEmail(
+    String email,
+    String password, {
+    String? displayName,
+  }) async {
     try {
-      final userModel = await _authService.signUpWithEmail(email, password, displayName: displayName);
+      final userModel = await _authService.signUpWithEmail(
+        email,
+        password,
+        displayName: displayName,
+      );
 
       if (userModel != null) {
         return AuthResult.success(userModel);
