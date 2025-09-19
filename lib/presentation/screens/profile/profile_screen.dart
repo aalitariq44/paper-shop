@@ -4,6 +4,7 @@ import 'package:paper_shop/core/constants/app_colors.dart';
 import 'package:paper_shop/core/constants/app_routes.dart';
 import 'package:paper_shop/presentation/providers/auth_provider.dart';
 import 'package:paper_shop/presentation/widgets/custom_button.dart';
+import 'package:paper_shop/presentation/widgets/contact_dialog.dart';
 
 /// صفحة الملف الشخصي
 class ProfileScreen extends StatefulWidget {
@@ -24,6 +25,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.textLight,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.contact_support),
+            onPressed: () => ContactDialog.show(context),
+            tooltip: 'اتصل بنا',
+          ),
+        ],
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
@@ -306,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildMenuTile(
             icon: Icons.contact_support,
             title: 'اتصل بنا',
-            onTap: _showContactDialog,
+            onTap: () => ContactDialog.show(context),
           ),
           const Divider(height: 1),
           _buildMenuTile(
@@ -414,56 +422,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     }
-  }
-
-  void _showContactDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('اتصل بنا'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('يمكنك التواصل معنا من خلال:'),
-            SizedBox(height: 16),
-            Row(
-              children: [
-                Icon(Icons.phone, color: AppColors.primaryColor, size: 20),
-                SizedBox(width: 8),
-                Text('0501234567'),
-              ],
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.email, color: AppColors.primaryColor, size: 20),
-                SizedBox(width: 8),
-                Text('info@papershop.com'),
-              ],
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(
-                  Icons.location_on,
-                  color: AppColors.primaryColor,
-                  size: 20,
-                ),
-                SizedBox(width: 8),
-                Expanded(child: Text('بغداد الكرادة')),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('إغلاق'),
-          ),
-        ],
-      ),
-    );
   }
 
   void _showPrivacyPolicy() {

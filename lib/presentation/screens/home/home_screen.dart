@@ -7,6 +7,7 @@ import 'package:paper_shop/presentation/providers/auth_provider.dart';
 import 'package:paper_shop/presentation/providers/products_provider.dart';
 import 'package:paper_shop/presentation/providers/cart_provider.dart';
 import 'package:paper_shop/presentation/widgets/product_card.dart';
+import 'package:paper_shop/presentation/widgets/contact_dialog.dart';
 import 'package:paper_shop/presentation/widgets/loading_widget.dart';
 import 'package:paper_shop/presentation/screens/orders/my_orders_screen.dart';
 import 'package:paper_shop/presentation/screens/profile/profile_screen.dart';
@@ -76,9 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Transform.translate(
           offset: const Offset(-8, 0),
           child: TextButton(
-            onPressed: () {
-              // TODO: تنفيذ منطق الاتصال لاحقاً
-            },
+            onPressed: () => ContactDialog.show(context),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -429,24 +428,24 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.category,
                     size: 64,
                     color: AppColors.textSecondary,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     'لا توجد تصنيفات متاحة',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'لم يتم العثور على أي تصنيفات',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
                     ),
@@ -561,24 +560,24 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.shopping_cart_outlined,
                     size: 64,
                     color: AppColors.textSecondary,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     AppStrings.emptyCart,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     AppStrings.emptyCartMessage,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
                     ),
@@ -744,7 +743,10 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Icon(Icons.shopping_cart),
           label: AppStrings.cart,
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'طلباتي'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.list_alt),
+          label: AppStrings.orders,
+        ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: AppStrings.profile,
