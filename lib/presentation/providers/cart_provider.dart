@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:paper_shop/data/models/product_model.dart';
 import 'package:paper_shop/data/models/cart_item_model.dart';
+import 'package:paper_shop/core/services/local_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -11,9 +12,8 @@ class CartProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
-  // مفاتيح التخزين المحلي
-  static const String _cartKey = 'cart_items';
-  static const String _cartCountKey = 'cart_count';
+  // تهيئة مبدئية
+  bool _initialized = false;
 
   bool _disposed = false;
 
@@ -23,6 +23,7 @@ class CartProvider extends ChangeNotifier {
   String? get error => _error;
   bool get isEmpty => _cartItems.isEmpty;
   int get itemCount => _cartItems.length;
+  bool get initialized => _initialized;
 
   /// عدد إجمالي القطع في السلة
   int get totalQuantity {
@@ -58,22 +59,39 @@ class CartProvider extends ChangeNotifier {
     return totalPrice > 100 ? 0 : cost; // شحن مجاني للطلبات أكثر من 100 دينار
   }
 
-  /// تحميل السلة من التخزين المحلي
-  Future<void> loadCart() async {
+  /// تهيئة الموفر وتحميل السلة من التخزين المحلي
+  Future<void> initialize() async {
     try {
       _setLoading(true);
       _clearError();
 
-      final prefs = await SharedPreferences.getInstance();
-      final cartData = prefs.getStringList(_cartKey);
+      // تهيئة التخزين المحلي وتحميل السلة
+      await LocalStorageService.instance.initialize();
+      final storedCart = await LocalStorageService.instance.getCart();
 
-      if (cartData != null && cartData.isNotEmpty) {
-        _cartItems = cartData
-            .map((jsonString) => CartItemModel.fromMap(jsonDecode(jsonString)))
-            .toList();
-      } else {
-        _cartItems = [];
+      _cartItems = storedCart?.items ?? [];
+
+      // ترحيل بيانات قديمة إن وُجدت (كانت مخزنة كسلسلة عناصر JSON)
+      if (_cartItems.isEmpty) {
+        const legacyCartKey = 'cart_items';
+        const legacyCartCountKey = 'cart_count';
+        final prefs = await SharedPreferences.getInstance();
+        final legacyData = prefs.getStringList(legacyCartKey);
+        if (legacyData != null && legacyData.isNotEmpty) {
+          try {
+            _cartItems = legacyData
+                .map((s) => CartItemModel.fromMap(jsonDecode(s)))
+                .toList();
+            // احفظ بالتنسيق الجديد ثم احذف المفاتيح القديمة
+            await _saveCart();
+            await prefs.remove(legacyCartKey);
+            await prefs.remove(legacyCartCountKey);
+          } catch (_) {
+            // تجاهل أي خطأ في الترحيل
+          }
+        }
       }
+      _initialized = true;
     } catch (e) {
       _setError('حدث خطأ في تحميل السلة: $e');
     } finally {
@@ -84,12 +102,11 @@ class CartProvider extends ChangeNotifier {
   /// حفظ السلة في التخزين المحلي
   Future<void> _saveCart() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final cartData = _cartItems
-          .map((item) => jsonEncode(item.toMap()))
-          .toList();
-      await prefs.setStringList(_cartKey, cartData);
-      await prefs.setInt(_cartCountKey, totalQuantity);
+      final cart = CartModel(
+        items: List<CartItemModel>.from(_cartItems),
+        lastUpdated: DateTime.now(),
+      );
+      await LocalStorageService.instance.saveCart(cart);
     } catch (e) {
       print('❌ Error saving cart: $e');
     }

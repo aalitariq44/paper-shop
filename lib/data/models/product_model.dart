@@ -73,12 +73,16 @@ class ProductModel {
       additionalImages: map['additionalImages'] != null
           ? List<String>.from(map['additionalImages'])
           : null,
-      createdAt: map['createdAt'] is Timestamp
-          ? (map['createdAt'] as Timestamp).toDate()
-          : null,
-      updatedAt: map['updatedAt'] is Timestamp
-          ? (map['updatedAt'] as Timestamp).toDate()
-          : null,
+    createdAt: map['createdAt'] is Timestamp
+      ? (map['createdAt'] as Timestamp).toDate()
+      : (map['createdAt'] is String && (map['createdAt'] as String).isNotEmpty
+        ? DateTime.tryParse(map['createdAt'] as String)
+        : null),
+    updatedAt: map['updatedAt'] is Timestamp
+      ? (map['updatedAt'] as Timestamp).toDate()
+      : (map['updatedAt'] is String && (map['updatedAt'] as String).isNotEmpty
+        ? DateTime.tryParse(map['updatedAt'] as String)
+        : null),
       isAvailable: map['isAvailable'] ?? true,
       stockQuantity: map['stockQuantity'],
       isFeatured: map['isFeatured'] ?? false,

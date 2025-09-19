@@ -28,9 +28,26 @@ class CartItemModel {
 
   /// تحويل CartItemModel إلى Map للحفظ المحلي
   Map<String, dynamic> toMap() {
+    // مخرجات متوافقة مع JSON (بدون كائنات Timestamp)
     return {
       'id': id,
-      'product': product.toMap(),
+      'product': {
+        'id': product.id,
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        'categoryId': product.categoryId,
+        'imageUrl': product.imageUrl,
+        'additionalImages': product.additionalImages,
+        // نخزن التواريخ كنص ISO لتجنب أنواع غير قابلة للـ JSON
+        'createdAt': product.createdAt?.toIso8601String(),
+        'updatedAt': product.updatedAt?.toIso8601String(),
+        'isAvailable': product.isAvailable,
+        'stockQuantity': product.stockQuantity,
+        'isFeatured': product.isFeatured,
+        'rating': product.rating,
+        'ratingCount': product.ratingCount,
+      },
       'quantity': quantity,
       'addedAt': addedAt.toIso8601String(),
     };

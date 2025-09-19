@@ -19,9 +19,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CartProvider>().loadCart();
-    });
   }
 
   @override
