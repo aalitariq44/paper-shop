@@ -456,17 +456,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _buildDetailRow('معرف المنتج', _product!.id),
-                const Divider(),
-                _buildDetailRow('الفئة', _product!.categoryId),
-                if (_product!.stockQuantity != null) ...[
-                  const Divider(),
-                  _buildDetailRow(
-                    'الكمية المتاحة',
-                    '${_product!.stockQuantity}',
-                  ),
-                ],
-                const Divider(),
                 _buildDetailRow(
                   'تاريخ الإضافة',
                   _product!.createdAt?.toString().split(' ')[0] ?? 'غير محدد',
