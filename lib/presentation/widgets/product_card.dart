@@ -102,6 +102,7 @@ class ProductCard extends StatelessWidget {
       width: width,
       height: height,
       child: Card(
+        margin: EdgeInsets.zero,
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -414,6 +415,7 @@ class HorizontalProductCard extends StatelessWidget {
     return SizedBox(
       height: height,
       child: Card(
+        margin: EdgeInsets.zero,
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

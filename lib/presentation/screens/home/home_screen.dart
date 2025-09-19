@@ -151,16 +151,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildHomeTab() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSearchBar(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           _buildWelcomeSection(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           _buildFeaturedProducts(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           _buildAllProducts(),
         ],
       ),
@@ -292,15 +292,15 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             return SizedBox(
-              height: 280,
+              height: 320,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: productsProvider.featuredProducts.length,
                 itemBuilder: (context, index) {
                   final product = productsProvider.featuredProducts[index];
                   return Container(
-                    width: 200,
-                    margin: const EdgeInsets.only(right: 12),
+                    width: 220,
+                    margin: const EdgeInsets.only(right: 8),
                     child: ProductCard(
                       product: product,
                       onTap: () => _navigateToProductDetails(product.id),
@@ -327,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: AppColors.textPrimary,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 4),
         Consumer<ProductsProvider>(
           builder: (context, productsProvider, child) {
             if (productsProvider.productsLoading) {
@@ -349,11 +349,12 @@ class _HomeScreenState extends State<HomeScreen> {
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.75,
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 2,
+                childAspectRatio: 0.6,
               ),
               itemCount: productsProvider.products.length,
               itemBuilder: (context, index) {
