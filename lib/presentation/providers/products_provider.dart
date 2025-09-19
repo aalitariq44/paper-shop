@@ -23,6 +23,8 @@ class ProductsProvider extends ChangeNotifier {
   bool _isSearching = false;
   String _currentSearchQuery = '';
 
+  bool _disposed = false;
+
   // الحصول على القيم - الفئات
   List<CategoryModel> get categories => _categories;
   bool get categoriesLoading => _categoriesLoading;
@@ -219,4 +221,16 @@ class ProductsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
 }

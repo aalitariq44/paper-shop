@@ -30,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadData() {
-    context.read<ProductsProvider>().loadProducts();
+    if (mounted) {
+      context.read<ProductsProvider>().loadProducts();
+    }
   }
 
   @override
@@ -674,26 +676,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _searchProducts(String query) {
-    context.read<ProductsProvider>().searchProducts(query);
+    if (mounted) {
+      context.read<ProductsProvider>().searchProducts(query);
+    }
   }
 
   void _navigateToProductDetails(String productId) {
-    Navigator.pushNamed(
-      context,
-      AppRoutes.productDetails,
-      arguments: productId,
-    );
+    if (mounted) {
+      Navigator.pushNamed(
+        context,
+        AppRoutes.productDetails,
+        arguments: productId,
+      );
+    }
   }
 
   void _navigateToLogin() {
-    Navigator.pushNamed(context, AppRoutes.login);
+    if (mounted) {
+      Navigator.pushNamed(context, AppRoutes.login);
+    }
   }
 
   void _navigateToProfileSetup() {
-    Navigator.pushNamed(context, AppRoutes.profileSetup);
+    if (mounted) {
+      Navigator.pushNamed(context, AppRoutes.profileSetup);
+    }
   }
 
   void _proceedToCheckout() {
+    if (!mounted) return;
     final authProvider = context.read<AuthProvider>();
 
     if (!authProvider.isSignedIn) {
@@ -736,7 +747,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                context.read<AuthProvider>().signOut();
+                if (mounted) {
+                  context.read<AuthProvider>().signOut();
+                }
               },
               child: const Text(AppStrings.confirm),
             ),

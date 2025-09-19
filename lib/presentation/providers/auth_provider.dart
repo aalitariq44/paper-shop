@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:paper_shop/data/repositories/auth_repository.dart';
 import 'package:paper_shop/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 
 /// مزود حالة المصادقة
 class AuthProvider extends ChangeNotifier {
@@ -11,6 +12,9 @@ class AuthProvider extends ChangeNotifier {
   UserModel? _user;
   bool _isLoading = false;
   String? _errorMessage;
+
+  StreamSubscription<User?>? _authStateSubscription;
+  bool _disposed = false;
 
   // الحصول على القيم
   UserModel? get user => _user;
@@ -29,7 +33,7 @@ class AuthProvider extends ChangeNotifier {
 
   /// الاستماع لتغييرات حالة المصادقة
   void _listenToAuthChanges() {
-    _authRepository.authStateChanges.listen((User? user) async {
+    _authStateSubscription = _authRepository.authStateChanges.listen((User? user) async {
       if (user != null) {
         await _loadUserData();
       } else {
@@ -158,4 +162,17 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
+  void dispose() {
+    _disposed = true;
+    _authStateSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
 }

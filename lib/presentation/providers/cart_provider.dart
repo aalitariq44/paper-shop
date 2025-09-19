@@ -15,6 +15,8 @@ class CartProvider extends ChangeNotifier {
   static const String _cartKey = 'cart_items';
   static const String _cartCountKey = 'cart_count';
 
+  bool _disposed = false;
+
   // الحصول على القيم
   List<CartItemModel> get cartItems => _cartItems;
   bool get isLoading => _isLoading;
@@ -273,4 +275,16 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
 }
