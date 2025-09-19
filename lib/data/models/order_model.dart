@@ -187,9 +187,15 @@ class OrderModel {
       deliveryFee: (map['deliveryFee'] ?? 0.0).toDouble(),
       total: (map['total'] ?? 0.0).toDouble(),
       status: OrderStatus.fromString(map['status'] ?? 'pending'),
-      createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      updatedAt: (map['updatedAt'] as Timestamp?)?.toDate(),
-      deliveryDate: (map['deliveryDate'] as Timestamp?)?.toDate(),
+      createdAt: map['createdAt'] is Timestamp
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: map['updatedAt'] is Timestamp
+          ? (map['updatedAt'] as Timestamp).toDate()
+          : null,
+      deliveryDate: map['deliveryDate'] is Timestamp
+          ? (map['deliveryDate'] as Timestamp).toDate()
+          : null,
       trackingNumber: map['trackingNumber'],
       adminNotes: map['adminNotes'],
     );

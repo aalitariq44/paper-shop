@@ -47,8 +47,12 @@ class ProductModel {
       additionalImages: data['additionalImages'] != null
           ? List<String>.from(data['additionalImages'])
           : null,
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
+          : null,
+      updatedAt: data['updatedAt'] is Timestamp
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : null,
       isAvailable: data['isAvailable'] ?? true,
       stockQuantity: data['stockQuantity'],
       isFeatured: data['isFeatured'] ?? false,

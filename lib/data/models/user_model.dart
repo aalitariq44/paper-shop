@@ -36,8 +36,12 @@ class UserModel {
       phoneNumber: data['phoneNumber'],
       address: data['address'],
       profileImageUrl: data['profileImageUrl'],
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
+          : null,
+      updatedAt: data['updatedAt'] is Timestamp
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : null,
       isProfileComplete: data['isProfileComplete'] ?? false,
       fcmToken: data['fcmToken'],
     );

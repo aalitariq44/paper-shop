@@ -23,7 +23,9 @@ class CategoryModel {
       id: doc.id,
       name: data['name'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
+          : null,
       sortOrder: data['sortOrder'] ?? 0,
     );
   }
