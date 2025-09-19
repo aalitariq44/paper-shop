@@ -8,6 +8,7 @@ import 'package:paper_shop/presentation/providers/products_provider.dart';
 import 'package:paper_shop/presentation/providers/cart_provider.dart';
 import 'package:paper_shop/presentation/widgets/product_card.dart';
 import 'package:paper_shop/presentation/widgets/loading_widget.dart';
+import 'package:paper_shop/presentation/screens/orders/my_orders_screen.dart';
 
 /// الشاشة الرئيسية للتطبيق
 class HomeScreen extends StatefulWidget {
@@ -48,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildHomeTab(),
           _buildCategoriesTab(),
           _buildCartTab(),
+          _buildOrdersTab(),
           _buildProfileTab(),
         ],
       ),
@@ -708,6 +710,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildOrdersTab() {
+    return const MyOrdersScreen();
+  }
+
   Widget _buildProfileTab() {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
@@ -856,6 +862,7 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Icon(Icons.shopping_cart),
           label: AppStrings.cart,
         ),
+        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'طلباتي'),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: AppStrings.profile,

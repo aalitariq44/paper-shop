@@ -8,11 +8,16 @@ import 'package:paper_shop/presentation/providers/auth_provider.dart';
 import 'package:paper_shop/presentation/providers/products_provider.dart';
 import 'package:paper_shop/presentation/providers/cart_provider.dart';
 import 'package:paper_shop/presentation/providers/user_provider.dart';
+import 'package:paper_shop/presentation/providers/order_provider.dart';
 import 'package:paper_shop/presentation/screens/home/home_screen.dart';
 import 'package:paper_shop/presentation/screens/auth/login_screen.dart';
 import 'package:paper_shop/presentation/screens/profile/profile_setup_screen.dart';
 import 'package:paper_shop/presentation/screens/profile/profile_screen.dart';
 import 'package:paper_shop/presentation/screens/cart/cart_screen.dart';
+import 'package:paper_shop/presentation/screens/cart/checkout_screen.dart';
+import 'package:paper_shop/presentation/screens/cart/order_confirmation_screen.dart';
+import 'package:paper_shop/presentation/screens/orders/my_orders_screen.dart';
+import 'package:paper_shop/presentation/screens/orders/order_details_screen.dart';
 import 'package:paper_shop/presentation/screens/product/product_details_screen.dart';
 
 /// التطبيق الرئيسي لمتجر ورق
@@ -28,6 +33,7 @@ class PaperShopApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => ProductsProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
@@ -349,6 +355,30 @@ class PaperShopApp extends StatelessWidget {
       case AppRoutes.cart:
         return MaterialPageRoute(
           builder: (_) => const CartScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.checkout:
+        return MaterialPageRoute(
+          builder: (_) => const CheckoutScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.orderConfirmation:
+        return MaterialPageRoute(
+          builder: (_) => const OrderConfirmationScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.orders:
+        return MaterialPageRoute(
+          builder: (_) => const MyOrdersScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.orderDetails:
+        return MaterialPageRoute(
+          builder: (_) => const OrderDetailsScreen(),
           settings: settings,
         );
 
