@@ -62,27 +62,33 @@ class _HomeScreenState extends State<HomeScreen> {
       foregroundColor: AppColors.textLight,
       elevation: 2,
       actions: [
-        TextButton(
-          onPressed: () {
-            // TODO: تنفيذ منطق الاتصال لاحقاً
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'اتصل بنا',
-                style: TextStyle(color: AppColors.textLight),
-              ),
-              const SizedBox(width: 4),
-              const Icon(Icons.call, color: AppColors.textLight),
-            ],
+        Transform.translate(
+          offset: const Offset(-8, 0),
+          child: TextButton(
+            onPressed: () {
+              // TODO: تنفيذ منطق الاتصال لاحقاً
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'اتصل بنا',
+                  style: TextStyle(color: AppColors.textLight),
+                ),
+                const SizedBox(width: 4),
+                const Icon(Icons.call, color: AppColors.textLight),
+              ],
+            ),
           ),
         ),
-        IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
-            // TODO: تنفيذ منطق الإشعارات لاحقاً
-          },
+        Transform.translate(
+          offset: const Offset(-8, 0),
+          child: IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              // TODO: تنفيذ منطق الإشعارات لاحقاً
+            },
+          ),
         ),
         Consumer<CartProvider>(
           builder: (context, cartProvider, child) {
