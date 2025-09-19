@@ -9,6 +9,7 @@ import 'package:paper_shop/presentation/providers/cart_provider.dart';
 import 'package:paper_shop/presentation/widgets/product_card.dart';
 import 'package:paper_shop/presentation/widgets/loading_widget.dart';
 import 'package:paper_shop/presentation/screens/orders/my_orders_screen.dart';
+import 'package:paper_shop/presentation/screens/profile/profile_screen.dart';
 
 /// الشاشة الرئيسية للتطبيق
 class HomeScreen extends StatefulWidget {
@@ -718,133 +719,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileTab() {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
-        if (!authProvider.isSignedIn) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.person_outline,
-                    size: 64,
-                    color: AppColors.textSecondary,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'يرجى تسجيل الدخول',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'سجل دخولك للوصول إلى ملفك الشخصي وطلباتك',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () => _navigateToLogin(),
-                    child: const Text(AppStrings.signIn),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColors.primaryColor,
-                        child: Icon(
-                          Icons.person,
-                          size: 30,
-                          color: AppColors.textLight,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              authProvider.user?.displayName ?? 'المستخدم',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              authProvider.user?.email ?? '',
-                              style: const TextStyle(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              _buildProfileMenuItem(
-                icon: Icons.edit,
-                title: 'تعديل الملف الشخصي',
-                onTap: () => _navigateToProfileSetup(),
-              ),
-              _buildProfileMenuItem(
-                icon: Icons.shopping_bag,
-                title: 'طلباتي',
-                onTap: () {
-                  // TODO: Navigate to orders
-                },
-              ),
-              _buildProfileMenuItem(
-                icon: Icons.logout,
-                title: AppStrings.signOut,
-                onTap: () => _showSignOutDialog(),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+    // عرض صفحة الملف الشخصي المخصصة بدل الواجهة المضمنة السابقة
+    return const ProfileScreen();
   }
 
-  Widget _buildProfileMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: Icon(icon, color: AppColors.primaryColor),
-        title: Text(title),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
-      ),
-    );
-  }
+  // تم الاستغناء عن عناصر قائمة الملف الشخصي لأن التبويب يعرض ProfileScreen مباشرةً
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
@@ -931,32 +810,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pushNamed(context, AppRoutes.checkout);
   }
 
-  void _showSignOutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(AppStrings.signOut),
-          content: const Text(AppStrings.signOutConfirm),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text(AppStrings.cancel),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (mounted) {
-                  context.read<AuthProvider>().signOut();
-                }
-              },
-              child: const Text(AppStrings.confirm),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // تم نقل منطق تسجيل الخروج للتعامل داخل صفحات الملف الشخصي نفسها عند الحاجة
 
   @override
   void dispose() {
