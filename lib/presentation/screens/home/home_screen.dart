@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: const Text(AppStrings.appName),
+      leading: const Icon(Icons.store, color: AppColors.textLight),
       backgroundColor: AppColors.primaryColor,
       foregroundColor: AppColors.textLight,
       elevation: 2,
