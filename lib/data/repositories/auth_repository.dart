@@ -46,6 +46,56 @@ class AuthRepository {
     }
   }
 
+  /// تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
+  Future<AuthResult> signInWithEmail(String email, String password) async {
+    try {
+      final userModel = await _authService.signInWithEmail(email, password);
+
+      if (userModel != null) {
+        return AuthResult.success(userModel);
+      } else {
+        return AuthResult.failure('فشل في تسجيل الدخول');
+      }
+    } on FirebaseAuthException catch (e) {
+      return AuthResult.failure(_getAuthErrorMessage(e));
+    } catch (e) {
+      print('❌ Error in signInWithEmail: $e');
+      return AuthResult.failure('حدث خطأ في تسجيل الدخول');
+    }
+  }
+
+  /// إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
+  Future<AuthResult> signUpWithEmail(String email, String password, {String? displayName}) async {
+    try {
+      final userModel = await _authService.signUpWithEmail(email, password, displayName: displayName);
+
+      if (userModel != null) {
+        return AuthResult.success(userModel);
+      } else {
+        return AuthResult.failure('فشل في إنشاء الحساب');
+      }
+    } on FirebaseAuthException catch (e) {
+      return AuthResult.failure(_getAuthErrorMessage(e));
+    } catch (e) {
+      print('❌ Error in signUpWithEmail: $e');
+      return AuthResult.failure('حدث خطأ في إنشاء الحساب');
+    }
+  }
+
+  /// إرسال رابط إعادة تعيين كلمة المرور
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      await _authService.sendPasswordResetEmail(email);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print('❌ Error sending password reset email: ${_getAuthErrorMessage(e)}');
+      return false;
+    } catch (e) {
+      print('❌ Error in sendPasswordResetEmail: $e');
+      return false;
+    }
+  }
+
   /// تسجيل الخروج
   Future<bool> signOut() async {
     try {

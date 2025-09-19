@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:paper_shop/core/constants/app_colors.dart';
-import 'package:paper_shop/core/constants/app_strings.dart';
 import 'package:paper_shop/core/constants/app_routes.dart';
 import 'package:paper_shop/presentation/providers/auth_provider.dart';
-import 'package:paper_shop/presentation/providers/user_provider.dart';
-import 'package:paper_shop/presentation/widgets/custom_text_field.dart';
 import 'package:paper_shop/presentation/widgets/custom_button.dart';
-import 'package:paper_shop/core/utils/validators.dart';
 
 /// شاشة إعداد الملف الشخصي
 class ProfileSetupScreen extends StatefulWidget {
@@ -46,7 +42,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.profileSetup),
+        title: const Text('إعداد الملف الشخصي'),
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.textLight,
       ),
@@ -119,7 +115,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 const Icon(Icons.person, color: AppColors.primaryColor),
                 const SizedBox(width: 8),
                 const Text(
-                  AppStrings.personalInfo,
+                  'المعلومات الشخصية',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -129,31 +125,62 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            CustomTextField(
+            TextFormField(
               controller: _nameController,
-              label: AppStrings.fullName,
-              hint: 'أدخل اسمك الكامل',
-              prefixIcon: const Icon(Icons.person_outline),
-              validator: Validators.validateFullName,
+              decoration: const InputDecoration(
+                labelText: 'الاسم الكامل',
+                hintText: 'أدخل اسمك الكامل',
+                prefixIcon: Icon(Icons.person_outline),
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'يرجى إدخال الاسم الكامل';
+                }
+                return null;
+              },
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 16),
-            CustomTextField(
+            TextFormField(
               controller: _phoneController,
-              label: AppStrings.phoneNumber,
-              hint: AppStrings.phoneHint,
-              prefixIcon: const Icon(Icons.phone_outlined),
+              decoration: const InputDecoration(
+                labelText: 'رقم الهاتف',
+                hintText: 'أدخل رقم هاتفك (مثال: 966501234567)',
+                prefixIcon: Icon(Icons.phone_outlined),
+                border: OutlineInputBorder(),
+              ),
               keyboardType: TextInputType.phone,
-              validator: Validators.validatePhoneNumber,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'يرجى إدخال رقم الهاتف';
+                }
+                if (value.trim().length < 10) {
+                  return 'رقم الهاتف غير صحيح';
+                }
+                return null;
+              },
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 16),
-            CustomTextField.multiline(
+            TextFormField(
               controller: _addressController,
-              label: AppStrings.address,
-              hint: AppStrings.addressHint,
-              validator: Validators.validateAddress,
-              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: 'العنوان',
+                hintText: 'أدخل عنوانك الكامل مع تفاصيل دقيقة للتوصيل',
+                prefixIcon: Icon(Icons.location_on_outlined),
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 4,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'يرجى إدخال العنوان';
+                }
+                if (value.trim().length < 10) {
+                  return 'يرجى إدخال عنوان مفصل';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 16),
             _buildEmailDisplay(),
@@ -182,7 +209,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      AppStrings.email,
+                      'البريد الإلكتروني',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -212,12 +239,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   Widget _buildSaveButton() {
-    return Consumer<UserProvider>(
-      builder: (context, userProvider, child) {
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
         return CustomButton.primary(
-          text: AppStrings.save,
-          onPressed: _isLoading || userProvider.isLoading ? null : _saveProfile,
-          isLoading: _isLoading || userProvider.isLoading,
+          text: 'حفظ المعلومات',
+          onPressed: _isLoading || authProvider.isLoading ? null : _saveProfile,
+          isLoading: _isLoading || authProvider.isLoading,
         );
       },
     );
@@ -242,30 +269,35 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     try {
       final authProvider = context.read<AuthProvider>();
-      final userProvider = context.read<UserProvider>();
 
       if (authProvider.user == null) {
         throw Exception('المستخدم غير مسجل');
       }
 
-      await userProvider.updateUser(
+      final success = await authProvider.updateProfile(
         displayName: _nameController.text.trim(),
         phoneNumber: _phoneController.text.trim(),
         address: _addressController.text.trim(),
       );
 
-      if (mounted) {
+      if (mounted && success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(AppStrings.profileUpdated),
+            content: Text('تم حفظ الملف الشخصي بنجاح'),
             backgroundColor: AppColors.successColor,
           ),
         );
 
         // العودة للشاشة الرئيسية
-        Navigator.of(
-          context,
-        ).pushNamedAndRemoveUntil(AppRoutes.home, (route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.home, (route) => false);
+      } else if (mounted && authProvider.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.errorMessage!),
+            backgroundColor: AppColors.errorColor,
+            duration: const Duration(seconds: 4),
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -299,7 +331,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text(AppStrings.cancel),
+              child: const Text('إلغاء'),
             ),
             ElevatedButton(
               onPressed: () {

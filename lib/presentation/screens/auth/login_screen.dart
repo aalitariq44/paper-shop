@@ -16,6 +16,24 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
+  bool _showEmailLogin = false;
+  bool _isSignUpMode = false;
+
+  // Controllers for email/password form
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _displayNameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _displayNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +97,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              AppStrings.welcomeBack,
-              style: TextStyle(
+            Text(
+              _showEmailLogin 
+                ? (_isSignUpMode ? 'إنشاء حساب جديد' : 'تسجيل الدخول')
+                : AppStrings.welcomeBack,
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
@@ -89,17 +109,28 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            const Text(
-              AppStrings.pleaseSignIn,
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+            Text(
+              _showEmailLogin 
+                ? (_isSignUpMode ? 'أدخل بياناتك لإنشاء حساب جديد' : 'أدخل بياناتك لتسجيل الدخول')
+                : AppStrings.pleaseSignIn,
+              style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-            _buildGoogleSignInButton(),
-            const SizedBox(height: 16),
-            _buildDivider(),
-            const SizedBox(height: 16),
-            _buildFeaturesList(),
+            
+            if (!_showEmailLogin) ...[
+              _buildGoogleSignInButton(),
+              const SizedBox(height: 16),
+              _buildDivider(),
+              const SizedBox(height: 16),
+              _buildEmailLoginButton(),
+              const SizedBox(height: 16),
+              _buildFeaturesList(),
+            ] else ...[
+              _buildEmailForm(),
+              const SizedBox(height: 16),
+              _buildBackToOptionsButton(),
+            ],
           ],
         ),
       ),
@@ -118,6 +149,169 @@ class _LoginScreenState extends State<LoginScreen> {
           icon: const Icon(Icons.login, color: AppColors.textLight),
         );
       },
+    );
+  }
+
+  Widget _buildEmailLoginButton() {
+    return OutlinedButton.icon(
+      onPressed: _isLoading ? null : () {
+        setState(() {
+          _showEmailLogin = true;
+          _isSignUpMode = false;
+        });
+      },
+      icon: const Icon(Icons.email, color: AppColors.primaryColor),
+      label: const Text(
+        'تسجيل الدخول بالبريد الإلكتروني',
+        style: TextStyle(color: AppColors.primaryColor),
+      ),
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        side: const BorderSide(color: AppColors.primaryColor),
+      ),
+    );
+  }
+
+  Widget _buildEmailForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_isSignUpMode) ...[
+            TextFormField(
+              controller: _displayNameController,
+              decoration: const InputDecoration(
+                labelText: 'الاسم الكامل',
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'يرجى إدخال الاسم';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
+          
+          TextFormField(
+            controller: _emailController,
+            decoration: const InputDecoration(
+              labelText: 'البريد الإلكتروني',
+              prefixIcon: Icon(Icons.email),
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'يرجى إدخال البريد الإلكتروني';
+              }
+              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                return 'يرجى إدخال بريد إلكتروني صحيح';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+          
+          TextFormField(
+            controller: _passwordController,
+            decoration: const InputDecoration(
+              labelText: 'كلمة المرور',
+              prefixIcon: Icon(Icons.lock),
+              border: OutlineInputBorder(),
+            ),
+            obscureText: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'يرجى إدخال كلمة المرور';
+              }
+              if (_isSignUpMode && value.length < 6) {
+                return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+              }
+              return null;
+            },
+          ),
+          
+          if (_isSignUpMode) ...[
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _confirmPasswordController,
+              decoration: const InputDecoration(
+                labelText: 'تأكيد كلمة المرور',
+                prefixIcon: Icon(Icons.lock_outline),
+                border: OutlineInputBorder(),
+              ),
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'يرجى تأكيد كلمة المرور';
+                }
+                if (value != _passwordController.text) {
+                  return 'كلمة المرور غير متطابقة';
+                }
+                return null;
+              },
+            ),
+          ],
+          
+          const SizedBox(height: 24),
+          
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              return CustomButton.primary(
+                text: _isSignUpMode ? 'إنشاء حساب' : 'تسجيل الدخول',
+                onPressed: _isLoading || authProvider.isLoading
+                    ? null
+                    : _submitEmailForm,
+                isLoading: _isLoading || authProvider.isLoading,
+              );
+            },
+          ),
+          
+          const SizedBox(height: 16),
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(_isSignUpMode ? 'لديك حساب؟ ' : 'ليس لديك حساب؟ '),
+              TextButton(
+                onPressed: _isLoading ? null : () {
+                  setState(() {
+                    _isSignUpMode = !_isSignUpMode;
+                    _clearForm();
+                  });
+                },
+                child: Text(_isSignUpMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد'),
+              ),
+            ],
+          ),
+          
+          if (!_isSignUpMode) ...[
+            TextButton(
+              onPressed: _isLoading ? null : _showForgotPasswordDialog,
+              child: const Text('نسيت كلمة المرور؟'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBackToOptionsButton() {
+    return TextButton.icon(
+      onPressed: _isLoading ? null : () {
+        setState(() {
+          _showEmailLogin = false;
+          _isSignUpMode = false;
+          _clearForm();
+        });
+      },
+      icon: const Icon(Icons.arrow_back),
+      label: const Text('العودة إلى خيارات تسجيل الدخول'),
     );
   }
 
@@ -259,5 +453,148 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _skipLogin() {
     Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+  }
+
+  void _clearForm() {
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+    _displayNameController.clear();
+  }
+
+  Future<void> _submitEmailForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final authProvider = context.read<AuthProvider>();
+      bool success = false;
+
+      if (_isSignUpMode) {
+        success = await authProvider.signUpWithEmail(
+          _emailController.text.trim(),
+          _passwordController.text,
+          displayName: _displayNameController.text.trim(),
+        );
+      } else {
+        success = await authProvider.signInWithEmail(
+          _emailController.text.trim(),
+          _passwordController.text,
+        );
+      }
+
+      if (mounted && success) {
+        // التحقق من اكتمال الملف الشخصي
+        if (authProvider.user?.hasCompleteProfile == true) {
+          // العودة للشاشة السابقة أو الذهاب للرئيسية
+          Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+        } else {
+          // الذهاب لشاشة إعداد الملف الشخصي
+          Navigator.of(context).pushReplacementNamed(AppRoutes.profileSetup);
+        }
+      } else if (mounted && authProvider.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.errorMessage!),
+            backgroundColor: AppColors.errorColor,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('حدث خطأ: ${e.toString()}'),
+            backgroundColor: AppColors.errorColor,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _showForgotPasswordDialog() async {
+    final emailController = TextEditingController();
+    
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('إعادة تعيين كلمة المرور'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور'),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'البريد الإلكتروني',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('إلغاء'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('إرسال'),
+              onPressed: () async {
+                if (emailController.text.trim().isNotEmpty) {
+                  try {
+                    final authProvider = context.read<AuthProvider>();
+                    final success = await authProvider.sendPasswordResetEmail(emailController.text.trim());
+                    
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(success 
+                            ? 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني'
+                            : 'فشل في إرسال رابط إعادة تعيين كلمة المرور'),
+                          backgroundColor: success ? Colors.green : AppColors.errorColor,
+                          duration: const Duration(seconds: 4),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('حدث خطأ: ${e.toString()}'),
+                          backgroundColor: AppColors.errorColor,
+                          duration: const Duration(seconds: 4),
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

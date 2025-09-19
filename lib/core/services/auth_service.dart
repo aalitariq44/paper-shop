@@ -68,6 +68,69 @@ class AuthService {
     }
   }
 
+  /// تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
+  Future<UserModel?> signInWithEmail(String email, String password) async {
+    try {
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        // إنشاء أو تحديث بيانات المستخدم في Firestore
+        final userModel = await _createOrUpdateUser(user);
+        print('✅ User signed in with email successfully: ${user.email}');
+        return userModel;
+      }
+
+      return null;
+    } catch (e) {
+      print('❌ Error signing in with email: $e');
+      rethrow;
+    }
+  }
+
+  /// إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
+  Future<UserModel?> signUpWithEmail(String email, String password, {String? displayName}) async {
+    try {
+      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        // تحديث اسم المستخدم إذا تم توفيره
+        if (displayName != null && displayName.isNotEmpty) {
+          await user.updateDisplayName(displayName);
+          await user.reload();
+        }
+
+        // إنشاء بيانات المستخدم في Firestore
+        final userModel = await _createOrUpdateUser(user);
+        print('✅ User signed up with email successfully: ${user.email}');
+        return userModel;
+      }
+
+      return null;
+    } catch (e) {
+      print('❌ Error signing up with email: $e');
+      rethrow;
+    }
+  }
+
+  /// إرسال رابط إعادة تعيين كلمة المرور
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      print('✅ Password reset email sent successfully');
+    } catch (e) {
+      print('❌ Error sending password reset email: $e');
+      rethrow;
+    }
+  }
+
   /// إنشاء أو تحديث بيانات المستخدم في Firestore
   Future<UserModel> _createOrUpdateUser(User user) async {
     try {

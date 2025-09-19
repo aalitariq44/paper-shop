@@ -79,6 +79,77 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  /// تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
+  Future<bool> signInWithEmail(String email, String password) async {
+    try {
+      _setLoading(true);
+      _clearError();
+
+      final result = await _authRepository.signInWithEmail(email, password);
+
+      if (result.isSuccess && result.user != null) {
+        _user = result.user;
+        _setLoading(false);
+        return true;
+      } else {
+        _setError(result.errorMessage ?? 'فشل في تسجيل الدخول');
+        return false;
+      }
+    } catch (e) {
+      _setError('حدث خطأ في تسجيل الدخول: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
+  Future<bool> signUpWithEmail(String email, String password, {String? displayName}) async {
+    try {
+      _setLoading(true);
+      _clearError();
+
+      final result = await _authRepository.signUpWithEmail(email, password, displayName: displayName);
+
+      if (result.isSuccess && result.user != null) {
+        _user = result.user;
+        _setLoading(false);
+        return true;
+      } else {
+        _setError(result.errorMessage ?? 'فشل في إنشاء الحساب');
+        return false;
+      }
+    } catch (e) {
+      _setError('حدث خطأ في إنشاء الحساب: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// إرسال رابط إعادة تعيين كلمة المرور
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      _setLoading(true);
+      _clearError();
+
+      final success = await _authRepository.sendPasswordResetEmail(email);
+
+      if (success) {
+        _setLoading(false);
+        return true;
+      } else {
+        _setError('فشل في إرسال رابط إعادة تعيين كلمة المرور');
+        return false;
+      }
+    } catch (e) {
+      _setError('حدث خطأ في إرسال رابط إعادة تعيين كلمة المرور: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   /// تسجيل الخروج
   Future<bool> signOut() async {
     try {
