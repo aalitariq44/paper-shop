@@ -12,7 +12,20 @@
           "package_name": "com.example.paper_shop"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "875558433075-hfbdao28tbhlaqbrcq33j9nb4dt7lkv4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.paper_shop",
+            "certificate_hash": "8869be71d3ed4de6b70e7e3701e22f4f5e5ae904"
+          }
+        },
+        {
+          "client_id": "875558433075-0c8f9jhp541hdf9ahlg6n9qi9145lf6u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAG46VHmt4ZeS1T-83IxqvdErTZMGVawBQ"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875558433075-0c8f9jhp541hdf9ahlg6n9qi9145lf6u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "875558433075-0evvrevp33631lmi8t7uct1od9483pao.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.paperShop"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +56,12 @@
           "package_name": "com.example.paper_store_manager"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "875558433075-0c8f9jhp541hdf9ahlg6n9qi9145lf6u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAG46VHmt4ZeS1T-83IxqvdErTZMGVawBQ"
@@ -39,7 +69,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875558433075-0c8f9jhp541hdf9ahlg6n9qi9145lf6u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "875558433075-0evvrevp33631lmi8t7uct1od9483pao.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.paperShop"
+              }
+            }
+          ]
         }
       }
     }
