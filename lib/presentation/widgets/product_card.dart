@@ -103,7 +103,10 @@ class ProductCard extends StatelessWidget {
       height: height,
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: Colors.grey.shade300, width: 1),
+        ),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
@@ -412,7 +415,10 @@ class HorizontalProductCard extends StatelessWidget {
       height: height,
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: Colors.grey.shade300, width: 1),
+        ),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
