@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:paper_shop/core/constants/app_colors.dart';
 import 'package:paper_shop/core/constants/app_strings.dart';
-import 'package:paper_shop/core/constants/app_routes.dart';
 import 'package:paper_shop/presentation/providers/products_provider.dart';
 import 'package:paper_shop/presentation/providers/cart_provider.dart';
 import 'package:paper_shop/presentation/widgets/custom_button.dart';
@@ -90,53 +89,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              // TODO: مشاركة المنتج
-            },
-          ),
-          Consumer<CartProvider>(
-            builder: (context, cartProvider, child) {
-              final itemCount = cartProvider.itemCount;
-              return Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.shopping_cart),
-                    onPressed: () =>
-                        Navigator.pushNamed(context, AppRoutes.cart),
-                  ),
-                  if (itemCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                          color: AppColors.cartBadgeColor,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
-                        ),
-                        child: Text(
-                          '$itemCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
