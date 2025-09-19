@@ -182,7 +182,7 @@ class AppHelpers {
     showSnackBar(
       context,
       message,
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.blue,
       textColor: Colors.white,
     );
   }

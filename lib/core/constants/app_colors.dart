@@ -6,10 +6,10 @@ class AppColors {
 
   // الألوان الرئيسية
   static const Color primaryColor = Color(
-    0xFF2E7D32,
-  ); // أخضر للطبيعة والقرطاسية
-  static const Color primaryLightColor = Color(0xFF4CAF50); // أخضر فاتح
-  static const Color primaryDarkColor = Color(0xFF1B5E20); // أخضر داكن
+    0xFF1976D2,
+  ); // أزرق للطبيعة والقرطاسية
+  static const Color primaryLightColor = Color(0xFF42A5F5); // أزرق فاتح
+  static const Color primaryDarkColor = Color(0xFF0D47A1); // أزرق داكن
   static const Color secondaryColor = Color(0xFFFFA726); // برتقالي للإبرازات
 
   // ألوان الخلفيات
@@ -23,7 +23,7 @@ class AppColors {
   static const Color textLight = Colors.white;
 
   // ألوان الحالة
-  static const Color successColor = Color(0xFF4CAF50); // أخضر للنجاح
+  static const Color successColor = Color(0xFF2196F3); // أزرق للنجاح
   static const Color errorColor = Color(0xFFF44336); // أحمر للخطأ
   static const Color warningColor = Color(0xFFFF9800); // برتقالي للتحذير
   static const Color infoColor = Color(0xFF2196F3); // أزرق للمعلومات
@@ -34,7 +34,7 @@ class AppColors {
   static const Color dividerColor = Color(0xFFE0E0E0); // رمادي للخطوط الفاصلة
 
   // ألوان خاصة بالمتجر
-  static const Color priceColor = Color(0xFF2E7D32); // أخضر داكن للأسعار
+  static const Color priceColor = Color(0xFF1976D2); // أزرق داكن للأسعار
   static const Color discountColor = Color(0xFFF44336); // أحمر للخصومات
   static const Color cartBadgeColor = Color(0xFFF44336); // أحمر لشارة السلة
   static const Color ratingStarColor = Color(0xFFFFB300); // أصفر ذهبي للتقييم

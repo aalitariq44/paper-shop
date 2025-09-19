@@ -33,7 +33,9 @@ class AuthProvider extends ChangeNotifier {
 
   /// الاستماع لتغييرات حالة المصادقة
   void _listenToAuthChanges() {
-    _authStateSubscription = _authRepository.authStateChanges.listen((User? user) async {
+    _authStateSubscription = _authRepository.authStateChanges.listen((
+      User? user,
+    ) async {
       if (user != null) {
         await _loadUserData();
       } else {
