@@ -352,9 +352,11 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.zero,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 2,
-                mainAxisSpacing: 2,
-                childAspectRatio: 0.6,
+                // Minimal spacing to maximize card width
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                // Lower ratio for taller cards
+                childAspectRatio: 0.65,
               ),
               itemCount: productsProvider.products.length,
               itemBuilder: (context, index) {
