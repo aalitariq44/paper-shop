@@ -25,13 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.textLight,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.contact_support),
-            onPressed: () => ContactDialog.show(context),
-            tooltip: 'اتصل بنا',
-          ),
-        ],
       ),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
