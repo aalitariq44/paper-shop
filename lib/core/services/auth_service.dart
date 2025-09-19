@@ -164,8 +164,9 @@ class AuthService {
       if (displayName != null) updateData['displayName'] = displayName;
       if (phoneNumber != null) updateData['phoneNumber'] = phoneNumber;
       if (address != null) updateData['address'] = address;
-      if (profileImageUrl != null)
+      if (profileImageUrl != null) {
         updateData['profileImageUrl'] = profileImageUrl;
+      }
 
       // التحقق من اكتمال الملف الشخصي
       final currentDoc = await userDoc.get();

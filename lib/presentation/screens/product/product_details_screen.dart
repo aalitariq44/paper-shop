@@ -295,7 +295,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         const SizedBox(width: 8),
         Text(
-          '${_product!.rating!.toStringAsFixed(1)}',
+          _product!.rating!.toStringAsFixed(1),
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,

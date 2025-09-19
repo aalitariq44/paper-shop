@@ -154,7 +154,7 @@ class ProductModel {
     if (ratingCount == null || ratingCount == 0) {
       return 'لا يوجد تقييم';
     }
-    return '${averageRating.toStringAsFixed(1)} (${ratingCount} تقييم)';
+    return '${averageRating.toStringAsFixed(1)} ($ratingCount تقييم)';
   }
 
   @override

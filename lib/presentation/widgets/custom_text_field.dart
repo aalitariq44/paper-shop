@@ -35,7 +35,7 @@ class CustomTextField extends StatefulWidget {
   final EdgeInsetsGeometry? contentPadding;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     this.label,
     this.hint,
     this.helperText,
@@ -65,7 +65,7 @@ class CustomTextField extends StatefulWidget {
     this.fillColor,
     this.filled = true,
     this.contentPadding,
-  }) : super(key: key);
+  });
 
   /// إنشاء حقل كلمة مرور
   factory CustomTextField.password({
@@ -393,7 +393,7 @@ class LabeledTextField extends StatelessWidget {
   final bool required;
 
   const LabeledTextField({
-    Key? key,
+    super.key,
     required this.label,
     this.hint,
     this.controller,
@@ -405,7 +405,7 @@ class LabeledTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.required = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

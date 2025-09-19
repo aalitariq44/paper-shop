@@ -9,12 +9,12 @@ class LoadingWidget extends StatelessWidget {
   final double strokeWidth;
 
   const LoadingWidget({
-    Key? key,
+    super.key,
     this.message,
     this.color,
     this.size = 50.0,
     this.strokeWidth = 4.0,
-  }) : super(key: key);
+  });
 
   /// ويدجت تحميل صغير
   factory LoadingWidget.small({Color? color, String? message}) {
@@ -77,11 +77,11 @@ class ProgressLoadingWidget extends StatelessWidget {
   final Color? color;
 
   const ProgressLoadingWidget({
-    Key? key,
+    super.key,
     this.progress,
     this.message,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -134,12 +134,12 @@ class CustomCircularLoading extends StatefulWidget {
   final String? message;
 
   const CustomCircularLoading({
-    Key? key,
+    super.key,
     this.color,
     this.size = 50.0,
     this.duration = const Duration(seconds: 2),
     this.message,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomCircularLoading> createState() => _CustomCircularLoadingState();
@@ -251,13 +251,13 @@ class NetworkLoadingWidget extends StatelessWidget {
   final String? retryButtonText;
 
   const NetworkLoadingWidget({
-    Key? key,
+    super.key,
     required this.isLoading,
     this.error,
     this.onRetry,
     this.loadingMessage,
     this.retryButtonText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -311,11 +311,11 @@ class FullScreenLoadingWidget extends StatelessWidget {
   final Color? indicatorColor;
 
   const FullScreenLoadingWidget({
-    Key? key,
+    super.key,
     this.message,
     this.backgroundColor = Colors.black54,
     this.indicatorColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -350,8 +350,7 @@ class ButtonLoadingIndicator extends StatelessWidget {
   final Color? color;
   final double size;
 
-  const ButtonLoadingIndicator({Key? key, this.color, this.size = 16.0})
-    : super(key: key);
+  const ButtonLoadingIndicator({super.key, this.color, this.size = 16.0});
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ class ProductCard extends StatelessWidget {
   final double? height;
 
   const ProductCard({
-    Key? key,
+    super.key,
     required this.product,
     this.onTap,
     this.onAddToCart,
@@ -25,7 +25,7 @@ class ProductCard extends StatelessWidget {
     this.showActions = true,
     this.width,
     this.height,
-  }) : super(key: key);
+  });
 
   /// بطاقة منتج مضغوطة للقائمة الأفقية
   factory ProductCard.compact({
@@ -98,7 +98,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: Card(
@@ -398,17 +398,17 @@ class HorizontalProductCard extends StatelessWidget {
   final double height;
 
   const HorizontalProductCard({
-    Key? key,
+    super.key,
     required this.product,
     this.onTap,
     this.onAddToCart,
     this.isInCart = false,
     this.height = 100,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: height,
       child: Card(
         elevation: 2,

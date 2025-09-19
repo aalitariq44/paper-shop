@@ -20,7 +20,7 @@ class CustomButton extends StatelessWidget {
   final double elevation;
 
   const CustomButton({
-    Key? key,
+    super.key,
     required this.text,
     this.onPressed,
     this.isLoading = false,
@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
     this.isOutlined = false,
     this.borderColor,
     this.elevation = 2.0,
-  }) : super(key: key);
+  });
 
   /// إنشاء زر رئيسي
   factory CustomButton.primary({
@@ -223,7 +223,7 @@ class CustomButton extends StatelessWidget {
           )
         : BorderSide.none;
 
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: ElevatedButton(
@@ -309,7 +309,7 @@ class CustomIconButton extends StatelessWidget {
   final bool isLoading;
 
   const CustomIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     this.onPressed,
     this.backgroundColor,
@@ -318,7 +318,7 @@ class CustomIconButton extends StatelessWidget {
     this.iconSize = 24.0,
     this.tooltip,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
