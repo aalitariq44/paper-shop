@@ -451,7 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   size: 20,
                 ),
                 SizedBox(width: 8),
-                Expanded(child: Text('الرياض، المملكة العربية السعودية')),
+                Expanded(child: Text('بغداد الكرادة')),
               ],
             ),
           ],
