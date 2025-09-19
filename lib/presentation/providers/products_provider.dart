@@ -71,7 +71,9 @@ class ProductsProvider extends ChangeNotifier {
       _products = await _productRepository.getAllProducts(limit: limit);
       print('✅ تم تحميل ${_products.length} منتج بنجاح');
       for (var product in _products.take(3)) {
-        print('📦 المنتج: ${product.name} - السعر: ${product.price} - التصنيف: ${product.categoryId}');
+        print(
+          '📦 المنتج: ${product.name} - السعر: ${product.price} - التصنيف: ${product.categoryId}',
+        );
       }
     } catch (e) {
       print('❌ خطأ في تحميل المنتجات: $e');

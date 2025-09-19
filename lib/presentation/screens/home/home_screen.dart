@@ -342,8 +342,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, 
-                    size: 64, 
+                  const Icon(
+                    Icons.error_outline,
+                    size: 64,
                     color: AppColors.errorColor,
                   ),
                   const SizedBox(height: 16),
@@ -382,8 +383,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.category, 
-                    size: 64, 
+                  Icon(
+                    Icons.category,
+                    size: 64,
                     color: AppColors.textSecondary,
                   ),
                   SizedBox(height: 16),
