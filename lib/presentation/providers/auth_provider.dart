@@ -1,0 +1,165 @@
+import 'package:flutter/material.dart';
+import 'package:paper_shop/data/repositories/auth_repository.dart';
+import 'package:paper_shop/data/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+/// مزود حالة المصادقة
+class AuthProvider extends ChangeNotifier {
+  final AuthRepository _authRepository = AuthRepository.instance;
+
+  // الحالة الداخلية
+  UserModel? _user;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  // الحصول على القيم
+  UserModel? get user => _user;
+  bool get isLoading => _isLoading;
+  bool get isSignedIn => _user != null;
+  String? get errorMessage => _errorMessage;
+
+  AuthProvider() {
+    _initialize();
+  }
+
+  /// تهيئة المزود
+  void _initialize() {
+    _listenToAuthChanges();
+  }
+
+  /// الاستماع لتغييرات حالة المصادقة
+  void _listenToAuthChanges() {
+    _authRepository.authStateChanges.listen((User? user) async {
+      if (user != null) {
+        await _loadUserData();
+      } else {
+        _user = null;
+        notifyListeners();
+      }
+    });
+  }
+
+  /// تحميل بيانات المستخدم
+  Future<void> _loadUserData() async {
+    try {
+      _user = await _authRepository.getCurrentUserData();
+      notifyListeners();
+    } catch (e) {
+      print('❌ Error loading user data: $e');
+    }
+  }
+
+  /// تسجيل الدخول باستخدام Google
+  Future<bool> signInWithGoogle() async {
+    try {
+      _setLoading(true);
+      _clearError();
+
+      final result = await _authRepository.signInWithGoogle();
+
+      if (result.isSuccess && result.user != null) {
+        _user = result.user;
+        _setLoading(false);
+        return true;
+      } else {
+        _setError(result.errorMessage ?? 'فشل في تسجيل الدخول');
+        return false;
+      }
+    } catch (e) {
+      _setError('حدث خطأ في تسجيل الدخول: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// تسجيل الخروج
+  Future<bool> signOut() async {
+    try {
+      _setLoading(true);
+      _clearError();
+
+      final success = await _authRepository.signOut();
+
+      if (success) {
+        _user = null;
+        _setLoading(false);
+        return true;
+      } else {
+        _setError('فشل في تسجيل الخروج');
+        return false;
+      }
+    } catch (e) {
+      _setError('حدث خطأ في تسجيل الخروج: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// تحديث الملف الشخصي
+  Future<bool> updateProfile({
+    String? displayName,
+    String? phoneNumber,
+    String? address,
+    String? profileImageUrl,
+  }) async {
+    try {
+      _setLoading(true);
+      _clearError();
+
+      final result = await _authRepository.updateUserProfile(
+        displayName: displayName,
+        phoneNumber: phoneNumber,
+        address: address,
+        profileImageUrl: profileImageUrl,
+      );
+
+      if (result.isSuccess && result.user != null) {
+        _user = result.user;
+        _setLoading(false);
+        return true;
+      } else {
+        _setError(result.errorMessage ?? 'فشل في تحديث الملف الشخصي');
+        return false;
+      }
+    } catch (e) {
+      _setError('حدث خطأ في تحديث الملف الشخصي: $e');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// التحقق من اكتمال الملف الشخصي
+  bool get isProfileComplete {
+    return _user?.hasCompleteProfile ?? false;
+  }
+
+  /// إعادة تحميل بيانات المستخدم
+  Future<void> reloadUserData() async {
+    await _loadUserData();
+  }
+
+  // وظائف مساعدة لإدارة الحالة
+  void _setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
+  void _setError(String? error) {
+    _errorMessage = error;
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void _clearError() {
+    _errorMessage = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+}
