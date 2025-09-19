@@ -166,34 +166,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceColor,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+    return TextField(
+      controller: _searchController,
+      textDirection: TextDirection.rtl,
+      decoration: InputDecoration(
+        hintText: AppStrings.searchProducts,
+        prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: AppColors.textSecondary.withOpacity(0.5),
           ),
-        ],
-      ),
-      child: TextField(
-        controller: _searchController,
-        textDirection: TextDirection.rtl,
-        decoration: const InputDecoration(
-          hintText: AppStrings.searchProducts,
-          prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 12),
         ),
-        onSubmitted: (query) {
-          if (query.trim().isNotEmpty) {
-            _searchProducts(query.trim());
-          }
-        },
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: AppColors.textSecondary.withOpacity(0.5),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.primaryColor),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
+      onSubmitted: (query) {
+        if (query.trim().isNotEmpty) {
+          _searchProducts(query.trim());
+        }
+      },
     );
   }
 
