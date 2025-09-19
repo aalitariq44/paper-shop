@@ -47,8 +47,14 @@ class ProductsProvider extends ChangeNotifier {
       _setCategoriesLoading(true);
       _clearCategoriesError();
 
+      print('🔄 بدء تحميل التصنيفات...');
       _categories = await _productRepository.getCategories();
+      print('✅ تم تحميل ${_categories.length} تصنيف بنجاح');
+      for (var category in _categories) {
+        print('📁 التصنيف: ${category.name} - ID: ${category.id}');
+      }
     } catch (e) {
+      print('❌ خطأ في تحميل التصنيفات: $e');
       _setCategoriesError('حدث خطأ في تحميل الفئات: $e');
     } finally {
       _setCategoriesLoading(false);
@@ -61,8 +67,14 @@ class ProductsProvider extends ChangeNotifier {
       _setProductsLoading(true);
       _clearProductsError();
 
+      print('🔄 بدء تحميل المنتجات...');
       _products = await _productRepository.getAllProducts(limit: limit);
+      print('✅ تم تحميل ${_products.length} منتج بنجاح');
+      for (var product in _products.take(3)) {
+        print('📦 المنتج: ${product.name} - السعر: ${product.price} - التصنيف: ${product.categoryId}');
+      }
     } catch (e) {
+      print('❌ خطأ في تحميل المنتجات: $e');
       _setProductsError('حدث خطأ في تحميل المنتجات: $e');
     } finally {
       _setProductsLoading(false);
@@ -72,9 +84,11 @@ class ProductsProvider extends ChangeNotifier {
   /// تحميل المنتجات المميزة
   Future<void> loadFeaturedProducts({int? limit}) async {
     try {
+      print('🔄 بدء تحميل المنتجات المميزة...');
       _featuredProducts = await _productRepository.getFeaturedProducts(
         limit: limit,
       );
+      print('✅ تم تحميل ${_featuredProducts.length} منتج مميز');
       notifyListeners();
     } catch (e) {
       print('❌ Error loading featured products: $e');

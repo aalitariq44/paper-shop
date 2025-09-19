@@ -31,7 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _loadData() {
     if (mounted) {
-      context.read<ProductsProvider>().loadProducts();
+      final productsProvider = context.read<ProductsProvider>();
+      productsProvider.loadCategories();
+      productsProvider.loadProducts();
+      productsProvider.loadFeaturedProducts();
     }
   }
 
@@ -234,27 +237,25 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            if (productsProvider.products.isEmpty) {
+            if (productsProvider.featuredProducts.isEmpty) {
               return const SizedBox(
                 height: 200,
                 child: Center(
                   child: Text(
-                    'لا توجد منتجات متاحة حالياً',
+                    'لا توجد منتجات مميزة متاحة حالياً',
                     style: TextStyle(color: AppColors.textSecondary),
                   ),
                 ),
               );
             }
 
-            final featuredProducts = productsProvider.products.take(5).toList();
-
             return SizedBox(
               height: 280,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: featuredProducts.length,
+                itemCount: productsProvider.featuredProducts.length,
                 itemBuilder: (context, index) {
-                  final product = featuredProducts[index];
+                  final product = productsProvider.featuredProducts[index];
                   return Container(
                     width: 200,
                     margin: const EdgeInsets.only(right: 12),
@@ -328,31 +329,177 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategoriesTab() {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.category, size: 64, color: AppColors.textSecondary),
-            SizedBox(height: 16),
-            Text(
-              'التصنيفات',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+    return Consumer<ProductsProvider>(
+      builder: (context, productsProvider, child) {
+        if (productsProvider.categoriesLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (productsProvider.categoriesError != null) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, 
+                    size: 64, 
+                    color: AppColors.errorColor,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'خطأ في تحميل التصنيفات',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    productsProvider.categoriesError!,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => productsProvider.loadCategories(),
+                    child: const Text('إعادة المحاولة'),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              'قريباً سيتم إضافة تصنيفات المنتجات',
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-              textAlign: TextAlign.center,
+          );
+        }
+
+        if (productsProvider.categories.isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.category, 
+                    size: 64, 
+                    color: AppColors.textSecondary,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'لا توجد تصنيفات متاحة',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'لم يتم العثور على أي تصنيفات',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+
+        return GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.2,
+          ),
+          itemCount: productsProvider.categories.length,
+          itemBuilder: (context, index) {
+            final category = productsProvider.categories[index];
+            return Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  // TODO: Navigate to category products
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('تم اختيار تصنيف: ${category.name}'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // صورة التصنيف
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
+                          color: AppColors.surfaceColor,
+                        ),
+                        child: category.imageUrl.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(12),
+                                ),
+                                child: Image.network(
+                                  category.imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.category,
+                                      size: 48,
+                                      color: AppColors.primaryColor,
+                                    );
+                                  },
+                                ),
+                              )
+                            : const Icon(
+                                Icons.category,
+                                size: 48,
+                                color: AppColors.primaryColor,
+                              ),
+                      ),
+                    ),
+                    // اسم التصنيف
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          category.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
