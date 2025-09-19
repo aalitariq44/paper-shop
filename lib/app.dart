@@ -105,6 +105,7 @@ class PaperShopApp extends StatelessWidget {
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: AppColors.textLight,
+          fontFamily: 'Cairo',
         ),
         iconTheme: IconThemeData(color: AppColors.textLight),
       ),
@@ -117,7 +118,11 @@ class PaperShopApp extends StatelessWidget {
           elevation: 2,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Cairo',
+          ),
         ),
       ),
 
@@ -126,7 +131,11 @@ class PaperShopApp extends StatelessWidget {
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primaryColor,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          textStyle: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Cairo',
+          ),
         ),
       ),
 
@@ -166,8 +175,14 @@ class PaperShopApp extends StatelessWidget {
           horizontal: 16,
           vertical: 12,
         ),
-        labelStyle: const TextStyle(color: AppColors.textSecondary),
-        hintStyle: const TextStyle(color: AppColors.textSecondary),
+        labelStyle: const TextStyle(
+          color: AppColors.textSecondary,
+          fontFamily: 'Cairo',
+        ),
+        hintStyle: const TextStyle(
+          color: AppColors.textSecondary,
+          fontFamily: 'Cairo',
+        ),
       ),
 
       // سمة النصوص
@@ -176,46 +191,55 @@ class PaperShopApp extends StatelessWidget {
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         displayMedium: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         displaySmall: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         headlineMedium: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         titleLarge: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         titleMedium: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         bodyLarge: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.normal,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         bodyMedium: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
           color: AppColors.textPrimary,
+          fontFamily: 'Cairo',
         ),
         bodySmall: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
           color: AppColors.textSecondary,
+          fontFamily: 'Cairo',
         ),
       ),
 
@@ -242,10 +266,12 @@ class PaperShopApp extends StatelessWidget {
         selectedLabelStyle: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Cairo',
         ),
         unselectedLabelStyle: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
+          fontFamily: 'Cairo',
         ),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
@@ -355,7 +381,12 @@ class _NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('صفحة غير موجودة')),
+      appBar: AppBar(
+        title: const Text(
+          'صفحة غير موجودة',
+          style: TextStyle(fontFamily: 'Cairo'),
+        ),
+      ),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -368,12 +399,17 @@ class _NotFoundScreen extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
+                fontFamily: 'Cairo',
               ),
             ),
             SizedBox(height: 8),
             Text(
               'لم نتمكن من العثور على الصفحة المطلوبة',
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                fontFamily: 'Cairo',
+              ),
               textAlign: TextAlign.center,
             ),
           ],
