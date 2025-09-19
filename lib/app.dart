@@ -66,19 +66,18 @@ class PaperShopApp extends StatelessWidget {
   ThemeData _buildThemeData() {
     return ThemeData(
       // الألوان الأساسية
-      primarySwatch:
-          MaterialColor(AppColors.primaryColor.value, const <int, Color>{
-            50: Color(0xFFE8F5E8),
-            100: Color(0xFFC6E6C7),
-            200: Color(0xFFA1D5A3),
-            300: Color(0xFF7CC47E),
-            400: Color(0xFF60B663),
-            500: AppColors.primaryColor,
-            600: Color(0xFF43A047),
-            700: Color(0xFF388E3C),
-            800: Color(0xFF2E7D32),
-            900: Color(0xFF1B5E20),
-          }),
+      primarySwatch: MaterialColor(AppColors.primaryColor.value, <int, Color>{
+        50: Color(0xFFE8F5E8),
+        100: Color(0xFFC6E6C7),
+        200: Color(0xFFA1D5A3),
+        300: Color(0xFF7CC47E),
+        400: Color(0xFF60B663),
+        500: AppColors.primaryColor,
+        600: Color(0xFF43A047),
+        700: Color(0xFF388E3C),
+        800: Color(0xFF2E7D32),
+        900: Color(0xFF1B5E20),
+      }),
       primaryColor: AppColors.primaryColor,
 
       // ألوان إضافية
@@ -87,7 +86,6 @@ class PaperShopApp extends StatelessWidget {
         brightness: Brightness.light,
         secondary: AppColors.secondaryColor,
         surface: AppColors.surfaceColor,
-        background: AppColors.backgroundColor,
         error: AppColors.errorColor,
       ),
 
@@ -135,10 +133,10 @@ class PaperShopApp extends StatelessWidget {
       iconTheme: const IconThemeData(color: AppColors.primaryColor, size: 24),
 
       // سمة البطاقات
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.cardColor,
         elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.1),
+        shadowColor: Colors.black.withValues(alpha: 0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
@@ -259,7 +257,7 @@ class PaperShopApp extends StatelessWidget {
       // دعم RTL
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: AppColors.primaryColor,
-        selectionColor: AppColors.primaryColor.withOpacity(0.3),
+        selectionColor: AppColors.primaryColor.withValues(alpha: 0.3),
         selectionHandleColor: AppColors.primaryColor,
       ),
     );
