@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:paper_shop/data/repositories/product_repository.dart';
 import 'package:paper_shop/data/models/product_model.dart';
 import 'package:paper_shop/data/models/category_model.dart';
@@ -24,6 +25,7 @@ class ProductsProvider extends ChangeNotifier {
   String _currentSearchQuery = '';
 
   bool _disposed = false;
+  bool _notifyScheduled = false;
 
   // الحصول على القيم - الفئات
   List<CategoryModel> get categories => _categories;
@@ -245,8 +247,27 @@ class ProductsProvider extends ChangeNotifier {
 
   @override
   void notifyListeners() {
-    if (!_disposed) {
+    if (_disposed) return;
+
+    // Avoid notifying during build/layout phases to prevent
+    // "setState()/markNeedsBuild called during build" exceptions.
+    // If we're not idle, schedule the notification for the next frame.
+    final phase = SchedulerBinding.instance.schedulerPhase;
+    final inSafePhase = phase == SchedulerPhase.idle;
+
+    if (inSafePhase) {
       super.notifyListeners();
+      return;
     }
+
+    // Coalesce multiple notifications within the same frame.
+    if (_notifyScheduled) return;
+    _notifyScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _notifyScheduled = false;
+      if (!_disposed) {
+        super.notifyListeners();
+      }
+    });
   }
 }

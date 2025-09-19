@@ -33,9 +33,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Future<void> _loadProduct() async {
     try {
       final productsProvider = context.read<ProductsProvider>();
-      await productsProvider.loadProducts();
+      // Fetch the product directly by ID to avoid triggering global product reload
+      // and unnecessary provider notifications during the route transition build.
+      _product = await productsProvider.getProductById(widget.productId);
 
-      _product = productsProvider.products
+      // Fallback: if repo lookup failed, try to use any already-loaded cache
+      _product ??= productsProvider.products
           .where((p) => p.id == widget.productId)
           .firstOrNull;
 
