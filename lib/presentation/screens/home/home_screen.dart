@@ -62,6 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
       foregroundColor: AppColors.textLight,
       elevation: 2,
       actions: [
+        IconButton(
+          icon: const Icon(Icons.notifications),
+          onPressed: () {
+            // TODO: تنفيذ منطق الإشعارات لاحقاً
+          },
+        ),
         Consumer<CartProvider>(
           builder: (context, cartProvider, child) {
             final itemCount = cartProvider.itemCount;
