@@ -412,22 +412,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              _product!.description.isNotEmpty
-                  ? _product!.description
-                  : 'لا يوجد وصف متاح لهذا المنتج',
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.textPrimary,
-                height: 1.5,
-              ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            _product!.description.isNotEmpty
+                ? _product!.description
+                : 'لا يوجد وصف متاح لهذا المنتج',
+            style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.textPrimary,
+              height: 1.5,
             ),
           ),
         ),
@@ -448,21 +442,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                _buildDetailRow(
-                  'تاريخ الإضافة',
-                  _product!.createdAt?.toString().split(' ')[0] ?? 'غير محدد',
-                ),
-              ],
-            ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildDetailRow(
+                'تاريخ الإضافة',
+                _product!.createdAt?.toString().split(' ')[0] ?? 'غير محدد',
+              ),
+            ],
           ),
         ),
       ],
