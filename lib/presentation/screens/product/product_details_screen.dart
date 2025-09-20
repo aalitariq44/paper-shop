@@ -430,50 +430,55 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildBottomBar() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceColor,
-        border: Border(top: BorderSide(color: AppColors.dividerColor)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'الإجمالي',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
+    // SafeArea ensures the bar sits above system navigation (Android/iOS)
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: AppColors.surfaceColor,
+          border: Border(top: BorderSide(color: AppColors.dividerColor)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'الإجمالي',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                ),
-                Text(
-                  '${(_product!.price * _quantity).toStringAsFixed(0)} ${AppStrings.currency}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.priceColor,
+                  Text(
+                    '${(_product!.price * _quantity).toStringAsFixed(0)} ${AppStrings.currency}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.priceColor,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            flex: 2,
-            child: CustomButton.primary(
-              text: AppStrings.addToCart,
-              onPressed: _product!.isAvailable ? _addToCart : null,
-              icon: const Icon(
-                Icons.add_shopping_cart,
-                color: AppColors.textLight,
+                ],
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 16),
+            Expanded(
+              flex: 2,
+              child: CustomButton.primary(
+                text: AppStrings.addToCart,
+                onPressed: _product!.isAvailable ? _addToCart : null,
+                icon: const Icon(
+                  Icons.add_shopping_cart,
+                  color: AppColors.textLight,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
