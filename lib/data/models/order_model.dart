@@ -4,15 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// نموذج عنصر الطلب
 class OrderItemModel {
   final String id;
-  // بدلاً من حفظ بيانات المنتج كاملة، نحفظ معرف التصنيف فقط
-  final String categoryId;
+  // نحفظ معرف المنتج فقط بدلاً من كامل بياناته
+  final String productId;
   final int quantity;
   final double unitPrice;
   final double totalPrice;
 
   OrderItemModel({
     required this.id,
-    required this.categoryId,
+    required this.productId,
     required this.quantity,
     required this.unitPrice,
     required this.totalPrice,
@@ -20,9 +20,22 @@ class OrderItemModel {
 
   /// إنشاء OrderItemModel من Map
   factory OrderItemModel.fromMap(Map<String, dynamic> map) {
+    // دعم الرجوع للخلف: productId الأساسي، ثم product.id (القديم)، ثم categoryId (من تعديل سابق بالخطأ)
+    String resolvedProductId = '';
+    if (map['productId'] is String) {
+      resolvedProductId = map['productId'] as String;
+    } else if (map['product'] is Map<String, dynamic>) {
+      final p = map['product'] as Map<String, dynamic>;
+      if (p['id'] is String) {
+        resolvedProductId = p['id'] as String;
+      }
+    } else if (map['categoryId'] is String) {
+      resolvedProductId = map['categoryId'] as String;
+    }
+
     return OrderItemModel(
       id: map['id'] ?? '',
-      categoryId: map['categoryId'] ?? '',
+      productId: resolvedProductId,
       quantity: map['quantity'] ?? 1,
       unitPrice: (map['unitPrice'] ?? 0.0).toDouble(),
       totalPrice: (map['totalPrice'] ?? 0.0).toDouble(),
@@ -33,7 +46,7 @@ class OrderItemModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'categoryId': categoryId,
+      'productId': productId,
       'quantity': quantity,
       'unitPrice': unitPrice,
       'totalPrice': totalPrice,
@@ -43,14 +56,14 @@ class OrderItemModel {
   /// نسخ OrderItemModel مع تعديل بعض القيم
   OrderItemModel copyWith({
     String? id,
-    String? categoryId,
+    String? productId,
     int? quantity,
     double? unitPrice,
     double? totalPrice,
   }) {
     return OrderItemModel(
       id: id ?? this.id,
-      categoryId: categoryId ?? this.categoryId,
+      productId: productId ?? this.productId,
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
       totalPrice: totalPrice ?? this.totalPrice,
@@ -59,7 +72,7 @@ class OrderItemModel {
 
   @override
   String toString() {
-    return 'OrderItemModel{id: $id, categoryId: $categoryId, quantity: $quantity, totalPrice: $totalPrice}';
+    return 'OrderItemModel{id: $id, productId: $productId, quantity: $quantity, totalPrice: $totalPrice}';
   }
 }
 

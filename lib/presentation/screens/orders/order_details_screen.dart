@@ -4,6 +4,8 @@ import 'package:paper_shop/core/constants/app_colors.dart';
 import 'package:paper_shop/core/constants/app_routes.dart';
 import 'package:paper_shop/data/models/order_model.dart';
 import 'package:paper_shop/presentation/providers/order_provider.dart';
+import 'package:paper_shop/data/models/product_model.dart';
+import 'package:paper_shop/data/repositories/product_repository.dart';
 
 /// صفحة تفاصيل الطلب
 class OrderDetailsScreen extends StatefulWidget {
@@ -17,6 +19,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   OrderModel? _order;
   bool _isLoading = true;
   String? _error;
+  // تخزين بيانات المنتجات المحملة حسب productId
+  final Map<String, ProductModel> _productsById = {};
+  bool _isLoadingProducts = false;
 
   @override
   void initState() {
@@ -46,11 +51,37 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         _isLoading = false;
         _error = order == null ? 'لم يتم العثور على الطلب' : null;
       });
+
+      if (order != null && order.items.isNotEmpty) {
+        await _loadProductsForItems(order);
+      }
     } catch (e) {
       setState(() {
         _error = 'فشل في تحميل تفاصيل الطلب: $e';
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadProductsForItems(OrderModel order) async {
+    final ids = order.items
+        .map((e) => e.productId)
+        .where((id) => id.isNotEmpty)
+        .toSet()
+        .toList();
+    if (ids.isEmpty) return;
+    setState(() => _isLoadingProducts = true);
+    try {
+      final products = await ProductRepository.instance.getProductsByIds(ids);
+      setState(() {
+        _productsById.clear();
+        for (final p in products) {
+          _productsById[p.id] = p;
+        }
+        _isLoadingProducts = false;
+      });
+    } catch (e) {
+      setState(() => _isLoadingProducts = false);
     }
   }
 
@@ -324,65 +355,83 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _order!.items.length,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) {
-              final item = _order!.items[index];
-              return Row(
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceColor,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.dividerColor),
+          if (_isLoadingProducts)
+            const Center(child: CircularProgressIndicator()),
+          if (!_isLoadingProducts)
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _order!.items.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                final item = _order!.items[index];
+                final product = _productsById[item.productId];
+                return Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceColor,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.dividerColor),
+                      ),
+                      child: (product != null && product.imageUrl.isNotEmpty)
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                product.imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(
+                                    Icons.inventory,
+                                    color: AppColors.primaryColor,
+                                  );
+                                },
+                              ),
+                            )
+                          : const Icon(
+                              Icons.inventory,
+                              color: AppColors.primaryColor,
+                            ),
                     ),
-                    child: const Icon(
-                      Icons.inventory,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'التصنيف: ${item.categoryId}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product?.name ?? 'منتج (${item.productId})',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${item.unitPrice.toStringAsFixed(0)} د.ع × ${item.quantity}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppColors.textSecondary,
+                          const SizedBox(height: 4),
+                          Text(
+                            '${item.unitPrice.toStringAsFixed(0)} د.ع × ${item.quantity}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${item.totalPrice.toStringAsFixed(0)} د.ع',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
+                    Text(
+                      '${item.totalPrice.toStringAsFixed(0)} د.ع',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
-                  ),
-                ],
-              );
-            },
-          ),
+                  ],
+                );
+              },
+            ),
         ],
       ),
     );
