@@ -56,7 +56,7 @@ class OrderProvider with ChangeNotifier {
       final orderItems = cartItems.map((cartItem) {
         return OrderItemModel(
           id: cartItem.id,
-          product: cartItem.product,
+          categoryId: cartItem.product.categoryId,
           quantity: cartItem.quantity,
           unitPrice: cartItem.product.price,
           totalPrice: cartItem.totalPrice,
@@ -191,7 +191,7 @@ class OrderProvider with ChangeNotifier {
           order.userName.toLowerCase().contains(lowerQuery) ||
           order.userPhone.contains(query) ||
           order.items.any(
-            (item) => item.product.name.toLowerCase().contains(lowerQuery),
+            (item) => item.categoryId.toLowerCase().contains(lowerQuery),
           );
     }).toList();
   }

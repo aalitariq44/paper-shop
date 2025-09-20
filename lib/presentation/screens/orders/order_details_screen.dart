@@ -341,24 +341,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: AppColors.dividerColor),
                     ),
-                    child: item.product.imageUrl.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              item.product.imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.inventory,
-                                  color: AppColors.primaryColor,
-                                );
-                              },
-                            ),
-                          )
-                        : const Icon(
-                            Icons.inventory,
-                            color: AppColors.primaryColor,
-                          ),
+                    child: const Icon(
+                      Icons.inventory,
+                      color: AppColors.primaryColor,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -366,7 +352,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.product.name,
+                          'التصنيف: ${item.categoryId}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

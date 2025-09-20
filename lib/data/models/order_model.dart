@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:paper_shop/data/models/product_model.dart';
+// import removed: product details are no longer embedded in order items
 
 /// نموذج عنصر الطلب
 class OrderItemModel {
   final String id;
-  final ProductModel product;
+  // بدلاً من حفظ بيانات المنتج كاملة، نحفظ معرف التصنيف فقط
+  final String categoryId;
   final int quantity;
   final double unitPrice;
   final double totalPrice;
 
   OrderItemModel({
     required this.id,
-    required this.product,
+    required this.categoryId,
     required this.quantity,
     required this.unitPrice,
     required this.totalPrice,
@@ -21,7 +22,7 @@ class OrderItemModel {
   factory OrderItemModel.fromMap(Map<String, dynamic> map) {
     return OrderItemModel(
       id: map['id'] ?? '',
-      product: ProductModel.fromMap(map['product'], map['product']['id'] ?? ''),
+      categoryId: map['categoryId'] ?? '',
       quantity: map['quantity'] ?? 1,
       unitPrice: (map['unitPrice'] ?? 0.0).toDouble(),
       totalPrice: (map['totalPrice'] ?? 0.0).toDouble(),
@@ -32,7 +33,7 @@ class OrderItemModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'product': product.toMap(),
+      'categoryId': categoryId,
       'quantity': quantity,
       'unitPrice': unitPrice,
       'totalPrice': totalPrice,
@@ -42,14 +43,14 @@ class OrderItemModel {
   /// نسخ OrderItemModel مع تعديل بعض القيم
   OrderItemModel copyWith({
     String? id,
-    ProductModel? product,
+    String? categoryId,
     int? quantity,
     double? unitPrice,
     double? totalPrice,
   }) {
     return OrderItemModel(
       id: id ?? this.id,
-      product: product ?? this.product,
+      categoryId: categoryId ?? this.categoryId,
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
       totalPrice: totalPrice ?? this.totalPrice,
@@ -58,7 +59,7 @@ class OrderItemModel {
 
   @override
   String toString() {
-    return 'OrderItemModel{id: $id, product: ${product.name}, quantity: $quantity, totalPrice: $totalPrice}';
+    return 'OrderItemModel{id: $id, categoryId: $categoryId, quantity: $quantity, totalPrice: $totalPrice}';
   }
 }
 
