@@ -233,7 +233,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: 'تاريخ التسجيل',
               value: user?.createdAt != null
                   ? '${user!.createdAt!.day}/${user.createdAt!.month}/${user.createdAt!.year}'
-                  : 'غير محدد',
+                  : (user?.updatedAt != null
+                        ? '${user!.updatedAt!.day}/${user.updatedAt!.month}/${user.updatedAt!.year}'
+                        : 'غير محدد'),
             ),
           ],
         ),

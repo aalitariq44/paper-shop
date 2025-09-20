@@ -137,6 +137,10 @@ class AuthService {
       final userDoc = _firestore.collection('users').doc(user.uid);
       final now = DateTime.now();
 
+      // قراءة البيانات الحالية للتحقق من وجود المستخدم
+      final existingDoc = await userDoc.get();
+      final isNewUser = !existingDoc.exists;
+
       // كتابة بدون قراءة مسبقة (upsert)
       final data = <String, dynamic>{
         'email': user.email ?? '',
@@ -147,18 +151,16 @@ class AuthService {
         'updatedAt': Timestamp.fromDate(now),
       };
 
+      // إضافة createdAt فقط إذا كان المستخدم جديد
+      if (isNewUser) {
+        data['createdAt'] = Timestamp.fromDate(now);
+      }
+
       await userDoc.set(data, SetOptions(merge: true));
 
-      // نُعيد نموذجًا مبنيًا من المعطيات المتاحة دون قراءة
-      return UserModel(
-        uid: user.uid,
-        email: user.email ?? '',
-        displayName: user.displayName,
-        profileImageUrl: user.photoURL,
-        createdAt: null,
-        updatedAt: now,
-        isProfileComplete: false,
-      );
+      // قراءة البيانات المحدثة لإنشاء UserModel صحيح
+      final updatedDoc = await userDoc.get();
+      return UserModel.fromFirestore(updatedDoc);
     } catch (e) {
       print('❌ Error creating/updating user: $e');
       rethrow;
