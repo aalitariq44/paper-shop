@@ -135,37 +135,30 @@ class AuthService {
   Future<UserModel> _createOrUpdateUser(User user) async {
     try {
       final userDoc = _firestore.collection('users').doc(user.uid);
-      final docSnapshot = await userDoc.get();
-
       final now = DateTime.now();
 
-      if (docSnapshot.exists) {
-        // المستخدم موجود - تحديث البيانات الأساسية فقط
-        await userDoc.update({
-          'email': user.email ?? '',
-          'displayName': user.displayName,
-          'profileImageUrl': user.photoURL,
-          'updatedAt': Timestamp.fromDate(now),
-        });
+      // كتابة بدون قراءة مسبقة (upsert)
+      final data = <String, dynamic>{
+        'email': user.email ?? '',
+        'displayName': user.displayName,
+        'name':
+            (user.displayName ?? (user.email?.split('@').first ?? user.uid)),
+        'profileImageUrl': user.photoURL,
+        'updatedAt': Timestamp.fromDate(now),
+      };
 
-        // قراءة البيانات المحدثة
-        final updatedDoc = await userDoc.get();
-        return UserModel.fromFirestore(updatedDoc);
-      } else {
-        // مستخدم جديد - إنشاء ملف كامل
-        final newUserModel = UserModel(
-          uid: user.uid,
-          email: user.email ?? '',
-          displayName: user.displayName,
-          profileImageUrl: user.photoURL,
-          createdAt: now,
-          updatedAt: now,
-          isProfileComplete: false,
-        );
+      await userDoc.set(data, SetOptions(merge: true));
 
-        await userDoc.set(newUserModel.toMap());
-        return newUserModel;
-      }
+      // نُعيد نموذجًا مبنيًا من المعطيات المتاحة دون قراءة
+      return UserModel(
+        uid: user.uid,
+        email: user.email ?? '',
+        displayName: user.displayName,
+        profileImageUrl: user.photoURL,
+        createdAt: null,
+        updatedAt: now,
+        isProfileComplete: false,
+      );
     } catch (e) {
       print('❌ Error creating/updating user: $e');
       rethrow;
@@ -219,36 +212,54 @@ class AuthService {
     try {
       if (!isSignedIn) return null;
 
-      final userDoc = _firestore.collection('users').doc(currentUser!.uid);
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      final uid = currentUser!.uid;
+      final userDoc = _firestore.collection('users').doc(uid);
+
+      // حاول تحديث عرض الاسم في Firebase Auth أيضًا ليبقى متزامنًا
+      if (displayName != null && displayName.isNotEmpty) {
+        try {
+          await currentUser!.updateDisplayName(displayName);
+          await currentUser!.reload();
+        } catch (_) {
+          // تجاهل أخطاء تحديث عرض الاسم في Auth ولا تمنع استمرار التحديث في Firestore
+        }
+      }
+
+      // قراءة البيانات الحالية لضمان اكتمال البيانات المطلوبة من قواعد الأمان
+      final existingSnap = await userDoc.get();
+      final existing = existingSnap.data() ?? <String, dynamic>{};
+
+      // تجهيز البيانات المحدثة مع الحفاظ على الحقول المطلوبة من القواعد (email, name)
+      final now = DateTime.now();
+      final merged = <String, dynamic>{
+        ...existing,
+        'email': (existing['email'] as String?) ?? (currentUser!.email ?? ''),
+        if ((displayName ?? '').isNotEmpty) ...{
+          'displayName': displayName,
+          'name': displayName, // keep name in sync for rules
+        },
+        if (phoneNumber != null) 'phoneNumber': phoneNumber,
+        if (address != null) 'address': address,
+        if (profileImageUrl != null) 'profileImageUrl': profileImageUrl,
+        'updatedAt': Timestamp.fromDate(now),
       };
 
-      if (displayName != null) updateData['displayName'] = displayName;
-      if (phoneNumber != null) updateData['phoneNumber'] = phoneNumber;
-      if (address != null) updateData['address'] = address;
-      if (profileImageUrl != null) {
-        updateData['profileImageUrl'] = profileImageUrl;
-      }
+      // حساب اكتمال الملف الشخصي بعد الدمج
+      final mergedDisplayName = (merged['displayName'] as String?) ?? '';
+      final mergedPhone = (merged['phoneNumber'] as String?) ?? '';
+      final mergedAddress = (merged['address'] as String?) ?? '';
+      final isComplete =
+          mergedDisplayName.trim().isNotEmpty &&
+          mergedPhone.trim().isNotEmpty &&
+          mergedAddress.trim().isNotEmpty;
+      merged['isProfileComplete'] = isComplete;
 
-      // التحقق من اكتمال الملف الشخصي
-      final currentDoc = await userDoc.get();
-      if (currentDoc.exists) {
-        final currentUser = UserModel.fromFirestore(currentDoc);
-        final updatedUser = currentUser.copyWith(
-          displayName: displayName,
-          phoneNumber: phoneNumber,
-          address: address,
-          profileImageUrl: profileImageUrl,
-        );
+      // كتابة مدمجة للحفاظ على الحقول الأخرى (مثل fcmToken)
+      await userDoc.set(merged, SetOptions(merge: true));
 
-        updateData['isProfileComplete'] = updatedUser.hasCompleteProfile;
-      }
-
-      await userDoc.update(updateData);
-
-      // إرجاع البيانات المحدثة
-      return await getCurrentUserData();
+      // إعادة بناء نموذج المستخدم من البيانات المدمجة (دون حاجة لقراءة ثانية)
+      final userModel = UserModel.fromMap(merged, uid).copyWith(updatedAt: now);
+      return userModel;
     } catch (e) {
       print('❌ Error updating user profile: $e');
       rethrow;
@@ -311,10 +322,21 @@ class AuthService {
     try {
       if (!isSignedIn) return;
 
-      await _firestore.collection('users').doc(currentUser!.uid).update({
+      final uid = currentUser!.uid;
+      final docRef = _firestore.collection('users').doc(uid);
+
+      final String safeEmail = currentUser!.email ?? '';
+      final String safeName =
+          (currentUser!.displayName ??
+          (safeEmail.isNotEmpty ? safeEmail.split('@').first : uid));
+
+      // upsert بدون قراءة مسبقة
+      await docRef.set({
         'fcmToken': fcmToken,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
+        'email': safeEmail,
+        'name': safeName,
+      }, SetOptions(merge: true));
 
       print('✅ FCM token updated successfully');
     } catch (e) {

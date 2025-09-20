@@ -73,15 +73,16 @@ class UserRepository {
       final userId = _authService.currentUser!.uid;
       final userRef = _firestore.collection('users').doc(userId);
 
-      // الحصول على البيانات الحالية
-      final currentDoc = await userRef.get();
-      if (!currentDoc.exists) return null;
+      // كتابة بدون قراءة مسبقة، وإرفاق الحقول الإلزامية
+      final safeEmail = _authService.currentUser!.email ?? '';
+      final safeName =
+          (_authService.currentUser!.displayName ??
+          (safeEmail.isNotEmpty ? safeEmail.split('@').first : userId));
 
-      final currentUser = UserModel.fromFirestore(currentDoc);
-
-      // إعداد البيانات للتحديث
       final updateData = <String, dynamic>{
         'updatedAt': Timestamp.fromDate(DateTime.now()),
+        'email': safeEmail,
+        'name': displayName ?? safeName,
       };
 
       if (displayName != null) updateData['displayName'] = displayName;
@@ -91,24 +92,10 @@ class UserRepository {
         updateData['profileImageUrl'] = profileImageUrl;
       }
 
-      // إنشاء المستخدم المحدث للتحقق من اكتمال الملف
-      final updatedUser = currentUser.copyWith(
-        displayName: displayName,
-        phoneNumber: phoneNumber,
-        address: address,
-        profileImageUrl: profileImageUrl,
-        updatedAt: DateTime.now(),
-      );
+      await userRef.set(updateData, SetOptions(merge: true));
 
-      // تحديث حالة اكتمال الملف الشخصي
-      updateData['isProfileComplete'] = updatedUser.hasCompleteProfile;
-
-      // تحديث البيانات في Firestore
-      await userRef.update(updateData);
-
-      // إرجاع البيانات المحدثة
-      final updatedDoc = await userRef.get();
-      return UserModel.fromFirestore(updatedDoc);
+      // لا نقرأ المستند لتفادي حظر القواعد الحالية
+      return null;
     } catch (e) {
       print('❌ Error updating current user: $e');
       return null;
@@ -120,25 +107,16 @@ class UserRepository {
     try {
       final userRef = _firestore.collection('users').doc(user.uid);
 
-      // التحقق من وجود المستخدم
-      final doc = await userRef.get();
+      // upsert بدون قراءة مسبقة
+      final data = user.toMap();
+      data['email'] = user.email;
+      data['name'] = user.displayName ?? user.email.split('@').first;
+      data['updatedAt'] = Timestamp.fromDate(DateTime.now());
 
-      if (doc.exists) {
-        // تحديث البيانات الأساسية فقط
-        await userRef.update({
-          'email': user.email,
-          'displayName': user.displayName,
-          'profileImageUrl': user.profileImageUrl,
-          'updatedAt': Timestamp.fromDate(DateTime.now()),
-        });
-      } else {
-        // إنشاء مستخدم جديد
-        await userRef.set(user.toMap());
-      }
+      await userRef.set(data, SetOptions(merge: true));
 
-      // إرجاع البيانات المحدثة
-      final updatedDoc = await userRef.get();
-      return UserModel.fromFirestore(updatedDoc);
+      // لا نقرأ المستند لتفادي حظر القواعد
+      return null;
     } catch (e) {
       print('❌ Error creating/updating user: $e');
       return null;
@@ -311,13 +289,20 @@ class UserRepository {
     try {
       if (!_authService.isSignedIn) return false;
 
-      await _firestore
-          .collection('users')
-          .doc(_authService.currentUser!.uid)
-          .update({
-            'fcmToken': fcmToken,
-            'updatedAt': Timestamp.fromDate(DateTime.now()),
-          });
+      final uid = _authService.currentUser!.uid;
+      final docRef = _firestore.collection('users').doc(uid);
+
+      final safeEmail = _authService.currentUser!.email ?? '';
+      final safeName =
+          (_authService.currentUser!.displayName ??
+          (safeEmail.isNotEmpty ? safeEmail.split('@').first : uid));
+
+      await docRef.set({
+        'fcmToken': fcmToken,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+        'email': safeEmail,
+        'name': safeName,
+      }, SetOptions(merge: true));
 
       return true;
     } catch (e) {
@@ -407,13 +392,19 @@ class UserRepository {
     try {
       if (!_authService.isSignedIn) return false;
 
-      await _firestore
-          .collection('users')
-          .doc(_authService.currentUser!.uid)
-          .update({
-            'fcmToken': FieldValue.delete(),
-            'updatedAt': Timestamp.fromDate(DateTime.now()),
-          });
+      final uid = _authService.currentUser!.uid;
+      final docRef = _firestore.collection('users').doc(uid);
+      final safeEmail = _authService.currentUser!.email ?? '';
+      final safeName =
+          (_authService.currentUser!.displayName ??
+          (safeEmail.isNotEmpty ? safeEmail.split('@').first : uid));
+
+      await docRef.set({
+        'fcmToken': FieldValue.delete(),
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+        'email': safeEmail,
+        'name': safeName,
+      }, SetOptions(merge: true));
 
       return true;
     } catch (e) {

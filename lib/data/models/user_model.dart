@@ -72,6 +72,7 @@ class UserModel {
     return {
       'email': email,
       'displayName': displayName,
+      'name': displayName, // duplicate for rules
       'phoneNumber': phoneNumber,
       'address': address,
       'profileImageUrl': profileImageUrl,
