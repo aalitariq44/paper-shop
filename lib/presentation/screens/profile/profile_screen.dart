@@ -459,7 +459,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('الشروط والأحكام'),
+        title: const Text(
+          'الشروط والأحكام',
+          style: TextStyle(
+            fontFamily: 'Cairo',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
         content: const SingleChildScrollView(
           child: Text(
             'شروط وأحكام استخدام متجر الأوراق:\n\n'
