@@ -378,34 +378,42 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     AuthProvider authProvider,
     OrderProvider orderProvider,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          CustomButton.primary(
-            text: _isProcessing ? 'جاري معالجة الطلب...' : 'تأكيد الطلب',
-            onPressed: _isProcessing
-                ? null
-                : () =>
-                      _confirmOrder(cartProvider, authProvider, orderProvider),
-            icon: _isProcessing
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+    // Ensure confirm button stays above system navigation (SafeArea)
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            CustomButton.primary(
+              text: _isProcessing ? 'جاري معالجة الطلب...' : 'تأكيد الطلب',
+              onPressed: _isProcessing
+                  ? null
+                  : () => _confirmOrder(
+                      cartProvider,
+                      authProvider,
+                      orderProvider,
                     ),
-                  )
-                : const Icon(Icons.check_circle, color: Colors.white),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'بالضغط على تأكيد الطلب فإنك توافق على شروط وأحكام الخدمة',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-          ),
-        ],
+              icon: _isProcessing
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : const Icon(Icons.check_circle, color: Colors.white),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'بالضغط على تأكيد الطلب فإنك توافق على شروط وأحكام الخدمة',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+            ),
+          ],
+        ),
       ),
     );
   }
