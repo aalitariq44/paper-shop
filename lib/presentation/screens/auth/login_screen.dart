@@ -23,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _displayNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -31,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _displayNameController.dispose();
     super.dispose();
   }
 
@@ -186,23 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (_isSignUpMode) ...[
-            TextFormField(
-              controller: _displayNameController,
-              decoration: const InputDecoration(
-                labelText: 'الاسم الكامل',
-                prefixIcon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'يرجى إدخال الاسم';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
+          if (_isSignUpMode) ...[const SizedBox(height: 16)],
 
           TextFormField(
             controller: _emailController,
@@ -472,7 +454,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.clear();
     _passwordController.clear();
     _confirmPasswordController.clear();
-    _displayNameController.clear();
   }
 
   Future<void> _submitEmailForm() async {
@@ -492,7 +473,6 @@ class _LoginScreenState extends State<LoginScreen> {
         success = await authProvider.signUpWithEmail(
           _emailController.text.trim(),
           _passwordController.text,
-          displayName: _displayNameController.text.trim(),
         );
       } else {
         success = await authProvider.signInWithEmail(
