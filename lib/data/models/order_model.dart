@@ -318,7 +318,8 @@ class OrderModel {
   bool get canBeModified => status.canBeModified;
 
   /// التحقق من اكتمال الطلب
-  bool get isCompleted => status == OrderStatus.completed;
+  bool get isCompleted =>
+      status == OrderStatus.completed || status == OrderStatus.delivered;
 
   /// التحقق من إلغاء الطلب
   bool get isCancelled => status == OrderStatus.cancelled;
