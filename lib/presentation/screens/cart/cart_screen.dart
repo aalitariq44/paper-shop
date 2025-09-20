@@ -43,23 +43,25 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ],
       ),
-      body: Consumer<CartProvider>(
-        builder: (context, cartProvider, child) {
-          if (cartProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SafeArea(
+        child: Consumer<CartProvider>(
+          builder: (context, cartProvider, child) {
+            if (cartProvider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (cartProvider.cartItems.isEmpty) {
-            return _buildEmptyCart();
-          }
+            if (cartProvider.cartItems.isEmpty) {
+              return _buildEmptyCart();
+            }
 
-          return Column(
-            children: [
-              Expanded(child: _buildCartItems(cartProvider)),
-              _buildCartSummary(cartProvider),
-            ],
-          );
-        },
+            return Column(
+              children: [
+                Expanded(child: _buildCartItems(cartProvider)),
+                _buildCartSummary(cartProvider),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
