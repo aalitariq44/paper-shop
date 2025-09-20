@@ -306,26 +306,8 @@ class _CartScreenState extends State<CartScreen> {
           _buildSummaryRow('عدد العناصر', '${cartProvider.totalQuantity}'),
           const SizedBox(height: 8),
           _buildSummaryRow(
-            'المجموع الجزئي',
-            '${cartProvider.totalPrice.toStringAsFixed(2)} ${AppStrings.currency}',
-          ),
-          const SizedBox(height: 8),
-          _buildSummaryRow(
-            'رسوم الشحن',
-            cartProvider.shippingCost > 0
-                ? '${cartProvider.shippingCost.toStringAsFixed(0)} ${AppStrings.currency}'
-                : 'مجاني',
-            isShipping: true,
-          ),
-          const SizedBox(height: 8),
-          _buildSummaryRow(
-            'الضريبة (15%)',
-            '${cartProvider.taxAmount.toStringAsFixed(2)} ${AppStrings.currency}',
-          ),
-          const Divider(height: 20),
-          _buildSummaryRow(
             AppStrings.total,
-            '${cartProvider.grandTotal.toStringAsFixed(2)} ${AppStrings.currency}',
+            '${cartProvider.totalPrice.toStringAsFixed(2)} ${AppStrings.currency}',
             isTotal: true,
           ),
           const SizedBox(height: 20),
