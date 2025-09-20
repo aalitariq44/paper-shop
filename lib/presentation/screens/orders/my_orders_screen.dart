@@ -321,11 +321,11 @@ class _MyOrdersScreenState extends State<MyOrdersScreen>
                   if (order.canBeCancelled) ...[
                     const SizedBox(width: 12),
                     Expanded(
-                      child: ElevatedButton(
+                      child: OutlinedButton(
                         onPressed: () => _showCancelOrderDialog(order),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.errorColor,
-                          foregroundColor: AppColors.textLight,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.errorColor,
+                          side: const BorderSide(color: AppColors.errorColor),
                         ),
                         child: const Text('إلغاء'),
                       ),
