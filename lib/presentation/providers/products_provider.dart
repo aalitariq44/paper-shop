@@ -15,7 +15,6 @@ class ProductsProvider extends ChangeNotifier {
 
   // الحالة الداخلية للمنتجات
   List<ProductModel> _products = [];
-  List<ProductModel> _featuredProducts = [];
   bool _productsLoading = false;
   String? _productsError;
 
@@ -34,7 +33,6 @@ class ProductsProvider extends ChangeNotifier {
 
   // الحصول على القيم - المنتجات
   List<ProductModel> get products => _products;
-  List<ProductModel> get featuredProducts => _featuredProducts;
   bool get productsLoading => _productsLoading;
   String? get productsError => _productsError;
 
@@ -85,19 +83,7 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  /// تحميل المنتجات المميزة
-  Future<void> loadFeaturedProducts({int? limit}) async {
-    try {
-      print('🔄 بدء تحميل المنتجات المميزة...');
-      _featuredProducts = await _productRepository.getFeaturedProducts(
-        limit: limit,
-      );
-      print('✅ تم تحميل ${_featuredProducts.length} منتج مميز');
-      notifyListeners();
-    } catch (e) {
-      print('❌ Error loading featured products: $e');
-    }
-  }
+  // تم إلغاء ميزة المنتجات المميزة
 
   /// تحميل منتجات فئة معينة
   Future<List<ProductModel>> loadProductsByCategory(
@@ -182,11 +168,7 @@ class ProductsProvider extends ChangeNotifier {
 
   /// إعادة تحميل جميع البيانات
   Future<void> refreshAll() async {
-    await Future.wait([
-      loadCategories(),
-      loadProducts(),
-      loadFeaturedProducts(),
-    ]);
+    await Future.wait([loadCategories(), loadProducts()]);
   }
 
   /// الحصول على منتجات من قائمة IDs

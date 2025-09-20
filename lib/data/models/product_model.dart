@@ -13,7 +13,6 @@ class ProductModel {
   final DateTime? updatedAt;
   final bool isAvailable; // حالة التوفر
   final int? stockQuantity; // كمية المخزون
-  final bool isFeatured; // منتج مميز
   final double? rating; // تقييم المنتج
   final int? ratingCount; // عدد التقييمات
 
@@ -29,7 +28,6 @@ class ProductModel {
     this.updatedAt,
     this.isAvailable = true,
     this.stockQuantity,
-    this.isFeatured = false,
     this.rating,
     this.ratingCount,
   });
@@ -55,7 +53,6 @@ class ProductModel {
           : null,
       isAvailable: data['isAvailable'] ?? true,
       stockQuantity: data['stockQuantity'],
-      isFeatured: data['isFeatured'] ?? false,
       rating: (data['rating'] ?? 0).toDouble(),
       ratingCount: data['ratingCount'] ?? 0,
     );
@@ -87,7 +84,6 @@ class ProductModel {
                 : null),
       isAvailable: map['isAvailable'] ?? true,
       stockQuantity: map['stockQuantity'],
-      isFeatured: map['isFeatured'] ?? false,
       rating: (map['rating'] ?? 0).toDouble(),
       ratingCount: map['ratingCount'] ?? 0,
     );
@@ -106,7 +102,6 @@ class ProductModel {
       'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
       'isAvailable': isAvailable,
       'stockQuantity': stockQuantity,
-      'isFeatured': isFeatured,
       'rating': rating,
       'ratingCount': ratingCount,
     };
@@ -125,7 +120,6 @@ class ProductModel {
     DateTime? updatedAt,
     bool? isAvailable,
     int? stockQuantity,
-    bool? isFeatured,
     double? rating,
     int? ratingCount,
   }) {
@@ -141,7 +135,6 @@ class ProductModel {
       updatedAt: updatedAt ?? this.updatedAt,
       isAvailable: isAvailable ?? this.isAvailable,
       stockQuantity: stockQuantity ?? this.stockQuantity,
-      isFeatured: isFeatured ?? this.isFeatured,
       rating: rating ?? this.rating,
       ratingCount: ratingCount ?? this.ratingCount,
     );

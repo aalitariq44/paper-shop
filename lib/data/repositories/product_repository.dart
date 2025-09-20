@@ -125,54 +125,7 @@ class ProductRepository {
         });
   }
 
-  /// الحصول على المنتجات المميزة
-  Future<List<ProductModel>> getFeaturedProducts({int? limit}) async {
-    try {
-      Query query = _firestore
-          .collection('products')
-          .where('isAvailable', isEqualTo: true)
-          .where('isFeatured', isEqualTo: true)
-          .orderBy('createdAt', descending: true);
-
-      if (limit != null) {
-        query = query.limit(limit);
-      }
-
-      final querySnapshot = await query.get();
-
-      return querySnapshot.docs
-          .map((doc) => ProductModel.fromFirestore(doc))
-          .toList();
-    } catch (e) {
-      print('❌ Error getting featured products: $e');
-      return [];
-    }
-  }
-
-  /// stream للمنتجات المميزة
-  Stream<List<ProductModel>> getFeaturedProductsStream({int? limit}) {
-    Query query = _firestore
-        .collection('products')
-        .where('isAvailable', isEqualTo: true)
-        .where('isFeatured', isEqualTo: true)
-        .orderBy('createdAt', descending: true);
-
-    if (limit != null) {
-      query = query.limit(limit);
-    }
-
-    return query
-        .snapshots()
-        .map((querySnapshot) {
-          return querySnapshot.docs
-              .map((doc) => ProductModel.fromFirestore(doc))
-              .toList();
-        })
-        .handleError((error) {
-          print('❌ Error in featured products stream: $error');
-          return <ProductModel>[];
-        });
-  }
+  // تم إزالة دوال المنتجات المميزة
 
   /// الحصول على منتجات فئة معينة
   Future<List<ProductModel>> getProductsByCategory(
@@ -436,15 +389,12 @@ class ProductRepository {
           .where('isAvailable', isEqualTo: true)
           .get();
 
-      final featuredProductsSnapshot = await _firestore
-          .collection('products')
-          .where('isFeatured', isEqualTo: true)
-          .get();
+      // تم إزالة إحصائية المنتجات المميزة
 
       return {
         'total': allProductsSnapshot.docs.length,
         'available': availableProductsSnapshot.docs.length,
-        'featured': featuredProductsSnapshot.docs.length,
+        'featured': 0,
         'unavailable':
             allProductsSnapshot.docs.length -
             availableProductsSnapshot.docs.length,

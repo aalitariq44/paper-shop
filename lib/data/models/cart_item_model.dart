@@ -44,7 +44,6 @@ class CartItemModel {
         'updatedAt': product.updatedAt?.toIso8601String(),
         'isAvailable': product.isAvailable,
         'stockQuantity': product.stockQuantity,
-        'isFeatured': product.isFeatured,
         'rating': product.rating,
         'ratingCount': product.ratingCount,
       },

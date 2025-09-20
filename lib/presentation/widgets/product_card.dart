@@ -205,24 +205,7 @@ class ProductCard extends StatelessWidget {
   Widget _buildProductBadges() {
     return Column(
       children: [
-        // شارة المنتج المميز
-        if (product.isFeatured)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: AppColors.warningColor,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Text(
-              'مميز',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Cairo',
-              ),
-            ),
-          ),
+        // تم إزالة شارة المنتج المميز
 
         // شارة عدم التوفر
         if (!product.isAvailable) ...[

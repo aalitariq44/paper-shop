@@ -21,7 +21,6 @@ class AppStrings {
   static const String home = 'الرئيسية';
   static const String categories = 'التصنيفات';
   static const String products = 'المنتجات';
-  static const String featuredProducts = 'منتجات مميزة';
   static const String newProducts = 'أحدث المنتجات';
   static const String allProducts = 'جميع المنتجات';
   static const String viewAll = 'عرض الكل';
