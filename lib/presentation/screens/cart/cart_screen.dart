@@ -307,7 +307,7 @@ class _CartScreenState extends State<CartScreen> {
           const SizedBox(height: 8),
           _buildSummaryRow(
             AppStrings.total,
-            '${cartProvider.totalPrice.toStringAsFixed(2)} ${AppStrings.currency}',
+            '${cartProvider.totalPrice.toStringAsFixed(0)} ${AppStrings.currency}',
             isTotal: true,
           ),
           const SizedBox(height: 20),
