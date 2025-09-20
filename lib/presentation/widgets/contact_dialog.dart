@@ -19,15 +19,7 @@ class ContactDialog extends StatelessWidget {
             children: [
               Icon(Icons.phone, color: AppColors.primaryColor, size: 20),
               SizedBox(width: 8),
-              Text('0501234567'),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.email, color: AppColors.primaryColor, size: 20),
-              SizedBox(width: 8),
-              Text('info@papershop.com'),
+              Text('07701658558'),
             ],
           ),
           SizedBox(height: 8),
@@ -35,7 +27,11 @@ class ContactDialog extends StatelessWidget {
             children: [
               Icon(Icons.location_on, color: AppColors.primaryColor, size: 20),
               SizedBox(width: 8),
-              Expanded(child: Text('بغداد الكرادة')),
+              Expanded(
+                child: Text(
+                  'الموصل - المجموعة الثقافية - مقابل جامع هيبة خاتون وازل البريد',
+                ),
+              ),
             ],
           ),
         ],
