@@ -48,7 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _currentIndex,
         children: [
           _buildHomeTab(),
-          _buildCartTab(),
+          // Cart tab replaced by dedicated CartScreen route
+          const SizedBox.shrink(),
           _buildOrdersTab(),
           _buildProfileTab(),
         ],
@@ -109,9 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(
                   icon: const Icon(Icons.shopping_cart),
                   onPressed: () {
-                    setState(() {
-                      _currentIndex = 1; // الانتقال لتبويب السلة
-                    });
+                    Navigator.pushNamed(context, AppRoutes.cart);
                   },
                 ),
                 if (itemCount > 0)
@@ -301,169 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // تم حذف تبويب التصنيفات غير المستخدم لتقليل التعقيد
-
-  Widget _buildCartTab() {
-    return Consumer<CartProvider>(
-      builder: (context, cartProvider, child) {
-        if (cartProvider.cartItems.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 64,
-                    color: AppColors.textSecondary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    AppStrings.emptyCart,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    AppStrings.emptyCartMessage,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        return Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: cartProvider.cartItems.length,
-                itemBuilder: (context, index) {
-                  final item = cartProvider.cartItems[index];
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: AppColors.surfaceColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.inventory,
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.product.name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${item.product.price} ${AppStrings.currency}',
-                                  style: const TextStyle(
-                                    color: AppColors.priceColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  cartProvider.decreaseQuantity(item.id);
-                                },
-                                icon: const Icon(Icons.remove),
-                                iconSize: 20,
-                              ),
-                              Text(
-                                '${item.quantity}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  cartProvider.increaseQuantity(item.id);
-                                },
-                                icon: const Icon(Icons.add),
-                                iconSize: 20,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: AppColors.surfaceColor,
-                border: Border(top: BorderSide(color: AppColors.dividerColor)),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        AppStrings.total,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '${cartProvider.totalPrice.toStringAsFixed(2)} ${AppStrings.currency}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.priceColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _proceedToCheckout(),
-                      child: const Text(AppStrings.proceedToCheckout),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  
 
   Widget _buildOrdersTab() {
     return const MyOrdersScreen();
@@ -480,6 +317,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return BottomNavigationBar(
       currentIndex: _currentIndex,
       onTap: (index) {
+        if (index == 1) {
+          // افتح شاشة السلة الحقيقية بدلاً من التبويب المحذوف
+          Navigator.pushNamed(context, AppRoutes.cart);
+          return;
+        }
         setState(() {
           _currentIndex = index;
         });
@@ -519,46 +361,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _navigateToLogin() {
-    if (mounted) {
-      Navigator.pushNamed(context, AppRoutes.login);
-    }
-  }
-
-  void _navigateToProfileSetup() {
-    if (mounted) {
-      Navigator.pushNamed(context, AppRoutes.profileSetup);
-    }
-  }
-
-  void _proceedToCheckout() {
-    if (!mounted) return;
-    final authProvider = context.read<AuthProvider>();
-
-    if (!authProvider.isSignedIn) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppStrings.signInRequired),
-          backgroundColor: AppColors.errorColor,
-        ),
-      );
-      _navigateToLogin();
-      return;
-    }
-
-    if (authProvider.user?.hasCompleteProfile != true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppStrings.profileCompleteRequired),
-          backgroundColor: AppColors.warningColor,
-        ),
-      );
-      _navigateToProfileSetup();
-      return;
-    }
-
-    Navigator.pushNamed(context, AppRoutes.checkout);
-  }
 
   // تم نقل منطق تسجيل الخروج للتعامل داخل صفحات الملف الشخصي نفسها عند الحاجة
 
