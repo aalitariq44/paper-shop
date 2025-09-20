@@ -49,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _currentIndex,
         children: [
           _buildHomeTab(),
-          _buildCategoriesTab(),
           _buildCartTab(),
           _buildOrdersTab(),
           _buildProfileTab(),
@@ -112,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.shopping_cart),
                   onPressed: () {
                     setState(() {
-                      _currentIndex = 2; // الانتقال لتبويب السلة
+                      _currentIndex = 1; // الانتقال لتبويب السلة
                     });
                   },
                 ),
@@ -258,14 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 1; // الانتقال لتبويب التصنيفات
-                });
-              },
-              child: const Text(AppStrings.viewAll),
             ),
           ],
         ),
@@ -735,10 +726,6 @@ class _HomeScreenState extends State<HomeScreen> {
       type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: AppStrings.home),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.category),
-          label: AppStrings.categories,
-        ),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart),
           label: AppStrings.cart,
