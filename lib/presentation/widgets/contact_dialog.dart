@@ -8,7 +8,14 @@ class ContactDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('اتصل بنا'),
+      title: const Text(
+        'اتصل بنا',
+        style: TextStyle(
+          fontFamily: 'Cairo',
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
       content: const Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
