@@ -300,7 +300,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // تم حذف تبويب التصنيفات غير المستخدم لتقليل التعقيد
-  
 
   Widget _buildOrdersTab() {
     return const MyOrdersScreen();
@@ -360,7 +359,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
   }
-
 
   // تم نقل منطق تسجيل الخروج للتعامل داخل صفحات الملف الشخصي نفسها عند الحاجة
 
