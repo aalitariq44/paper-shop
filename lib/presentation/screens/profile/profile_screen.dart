@@ -421,7 +421,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('سياسة الخصوصية'),
+        title: const Text(
+          'سياسة الخصوصية',
+          style: TextStyle(
+            fontFamily: 'Cairo',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
         content: const SingleChildScrollView(
           child: Text(
             'نحن في متجر الأوراق نلتزم بحماية خصوصيتك. '
